@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel de Controle Gu Car Revolut</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="noiseCanvas" aria-hidden="true"></canvas>
+
+  <main class="terminal-shell">
+    <header class="terminal-top">
+      <div class="window-controls" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="terminal-title">
+        <strong>PAINEL DE CONTROLE GU CAR REVOLUT</strong>
+        <small>mercado-livre-automation://root/session</small>
+      </div>
+      <div class="terminal-badge">ONLINE</div>
+    </header>
+
+    <section class="hero-terminal">
+      <aside class="boot-log panel">
+        <div class="panel-head">
+          <span>BOOT_SEQUENCE</span>
+          <b>LIVE</b>
+        </div>
+        <div class="log-lines" id="bootLog">
+          <p><span>00:01</span> carregando perfil chrome 9222</p>
+          <p><span>00:02</span> validando sessao mercado livre</p>
+          <p><span>00:03</span> injetando motores de extracao</p>
+          <p><span>00:04</span> sincronizando relatorios CSV/TXT</p>
+          <p><span>00:05</span> aguardando comando do operador</p>
+        </div>
+      </aside>
+
+      <section class="main-command panel">
+        <div class="command-label">ROOT ACCESS GRANTED</div>
+        <h1>
+          <span>painel</span>
+          <span>gu car</span>
+          <span>revolut</span>
+        </h1>
+        <p class="terminal-copy">
+          Central agressiva para operar robos de anuncios, estoque, clips e relatorios do Mercado Livre.
+        </p>
+
+        <div class="prompt-box">
+          <span class="prompt-user">gu-car@revolut</span>
+          <span class="prompt-path">~/ml/automation</span>
+          <span class="prompt-caret">$</span>
+          <strong id="typedCommand">run --scan-clips --active</strong>
+          <i></i>
+        </div>
+
+        <div class="command-actions">
+          <button type="button" class="danger-button">Executar rotina</button>
+          <button type="button" class="line-button">Abrir relatorios</button>
+          <button type="button" class="line-button">Configurar chrome</button>
+        </div>
+      </section>
+
+      <aside class="threat-panel panel">
+        <div class="panel-head">
+          <span>ROBOT_STATUS</span>
+          <b>ARMED</b>
+        </div>
+        <div class="radar">
+          <div class="radar-sweep"></div>
+          <strong>865</strong>
+          <span>anuncios mapeados</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="process-grid">
+      <article class="process-card panel is-hot">
+        <div class="process-title">
+          <span>PROC_01</span>
+          <strong>Clip Hunter</strong>
+        </div>
+        <p>Clica nos tres pontinhos da listagem, procura Criar clip/Incluir clip e salva apenas os acionaveis.</p>
+        <div class="process-command">python extrair_clips_lista_anuncios.py</div>
+        <div class="process-footer">
+          <span>status: pronto</span>
+          <button type="button">armar</button>
+        </div>
+      </article>
+
+      <article class="process-card panel">
+        <div class="process-title">
+          <span>PROC_02</span>
+          <strong>Stock Extractor</strong>
+        </div>
+        <p>Abre variacoes, captura Deposito, lado, SKU e quantidade, incluindo anuncios sem estoque.</p>
+        <div class="process-command">python extrair_estoque_variacoes.py</div>
+        <div class="process-footer">
+          <span>status: standby</span>
+          <button type="button">config</button>
+        </div>
+      </article>
+
+      <article class="process-card panel">
+        <div class="process-title">
+          <span>PROC_03</span>
+          <strong>Link Crawler</strong>
+        </div>
+        <p>Percorre todas as paginas ativas e monta a base de links, codigos, produtos e SKUs.</p>
+        <div class="process-command">python extrair_links_anuncios.py</div>
+        <div class="process-footer">
+          <span>status: indexado</span>
+          <button type="button">ver base</button>
+        </div>
+      </article>
+
+      <article class="process-card panel is-hot">
+        <div class="process-title">
+          <span>PROC_04</span>
+          <strong>GVI Locator</strong>
+        </div>
+        <p>Pesquisa o SKU/GVI no Bling, abre o produto, entra em Estoque e captura a localizacao da peça.</p>
+        <div class="process-command">python localizar_gvi_bling.py</div>
+        <div class="process-footer">
+          <span>status: novo modulo</span>
+          <button type="button">localizar</button>
+        </div>
+      </article>
+
+      <article class="process-card panel">
+        <div class="process-title">
+          <span>PROC_05</span>
+          <strong>Video Queue</strong>
+        </div>
+        <p>Monta a fila final de gravacao com produto, GVI, clip necessario, estoque Bling e localizacao fisica.</p>
+        <div class="process-command">export fila_videos_com_localizacao.csv</div>
+        <div class="process-footer">
+          <span>status: aguardando Bling</span>
+          <button type="button">exportar</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="operator-grid">
+      <article class="panel console-panel">
+        <div class="panel-head">
+          <span>EXECUTION_CONSOLE</span>
+          <b>STREAM</b>
+        </div>
+        <div class="console-stream" id="consoleStream">
+          <p><span>&gt;</span> aguardando ordem de execucao...</p>
+          <p><span>&gt;</span> scripts carregados em /work</p>
+          <p><span>&gt;</span> saida definida para /outputs</p>
+          <p><span>&gt;</span> modulo Bling pronto para localizar GVI</p>
+          <p><span>&gt;</span> operador autorizado</p>
+        </div>
+      </article>
+
+      <article class="panel switches-panel">
+        <div class="panel-head">
+          <span>FLAGS</span>
+          <b>MANUAL</b>
+        </div>
+        <div class="switch-list">
+          <label><input type="checkbox" checked /> anuncios ativos</label>
+          <label><input type="checkbox" /> anuncios pausados</label>
+          <label><input type="checkbox" checked /> extrair SKU</label>
+          <label><input type="checkbox" checked /> gerar CSV</label>
+          <label><input type="checkbox" checked /> gerar TXT</label>
+          <label><input type="checkbox" checked /> buscar Bling</label>
+          <label><input type="checkbox" checked /> fila de videos</label>
+          <label><input type="checkbox" /> modo silencioso</label>
+        </div>
+      </article>
+    </section>
+
+    <section class="memory-grid">
+      <article class="panel memory-panel">
+        <div class="panel-head">
+          <span>PROJECT_MEMORY</span>
+          <b>AUTO-SAVE</b>
+        </div>
+        <div class="memory-list" id="memoryList">
+          <div class="memory-item">
+            <span>CORE</span>
+            <strong>Interface CMD agressiva</strong>
+            <p>outputs/painel-gu-car-revolut</p>
+          </div>
+          <div class="memory-item">
+            <span>PROC_01</span>
+            <strong>Clip Hunter por listagem</strong>
+            <p>work/extrair_clips_lista_anuncios.py</p>
+          </div>
+          <div class="memory-item">
+            <span>PROC_03</span>
+            <strong>Link Crawler automatico</strong>
+            <p>work/extrair_links_anuncios.py</p>
+          </div>
+          <div class="memory-item">
+            <span>PROC_04</span>
+            <strong>GVI Locator Bling calibrado</strong>
+            <p>work/localizar_gvi_bling.py</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel save-panel">
+        <div class="panel-head">
+          <span>SAVE_STATE</span>
+          <b id="saveState">SYNCED</b>
+        </div>
+        <div class="save-readout">
+          <p><span>ultimo checkpoint</span><strong id="lastSaved">carregando...</strong></p>
+          <p><span>persistencia local</span><strong>ativa</strong></p>
+          <p><span>saida dos robos</span><strong>/outputs</strong></p>
+          <p><span>codigo operacional</span><strong>/work</strong></p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
