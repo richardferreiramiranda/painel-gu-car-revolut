@@ -64,6 +64,7 @@ let commandIndex = 0;
 let charIndex = 0;
 let deleting = false;
 let lastOutputCount = null;
+let jobIsActive = false;
 
 function loadState() {
   try {
@@ -170,6 +171,7 @@ async function callApi(path, options = {}) {
 function renderJobStatus(data) {
   const logs = data.logs || [];
   const percent = Number(data.percent || 0);
+  jobIsActive = Boolean(data.running);
 
   if (processState) {
     processState.textContent = data.running ? "EM ANDAMENTO" : (data.returncode === 0 ? "CONCLUÍDO" : "AGUARDANDO");
@@ -216,10 +218,7 @@ function renderJobStatus(data) {
 async function refreshJobStatus() {
   try {
     const data = await callApi("/api/status");
-
-    if (data.running || data.logs?.length) {
-      renderJobStatus(data);
-    }
+    renderJobStatus(data);
 
     return data;
   } catch {
@@ -315,6 +314,10 @@ function typeLoop() {
 }
 
 function appendStreamLine() {
+  if (jobIsActive) {
+    return;
+  }
+
   const line = streamLines[Math.floor(Math.random() * streamLines.length)];
   addConsoleLine(line);
 }
