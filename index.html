@@ -58,9 +58,9 @@
         </div>
 
         <div class="command-actions">
-          <button type="button" class="danger-button" data-run="lista-gvi">Executar rotina</button>
-          <button type="button" class="line-button" data-report="links">Abrir relatorios</button>
-          <button type="button" class="line-button">Configurar chrome</button>
+          <button type="button" class="danger-button" data-run="fluxo-teste">Teste rápido</button>
+          <button type="button" class="danger-button" data-run="fluxo-completo">Rodar completo</button>
+          <button type="button" class="line-button" data-report="all">Abrir relatorios</button>
         </div>
       </section>
 
@@ -75,6 +75,30 @@
           <span>anuncios mapeados</span>
         </div>
       </aside>
+    </section>
+
+    <section class="quick-flow panel">
+      <div class="panel-head">
+        <span>2-CLICK_MODE</span>
+        <b>SIMPLIFICADO</b>
+      </div>
+      <div class="quick-flow-grid">
+        <button type="button" class="mega-button" data-run="fluxo-teste">
+          <span>01</span>
+          <strong>Teste rápido</strong>
+          <small>1 página ML + 10 itens no Bling</small>
+        </button>
+        <button type="button" class="mega-button is-danger" data-run="fluxo-completo">
+          <span>02</span>
+          <strong>Rodar completo</strong>
+          <small>todos os anúncios + localização Bling</small>
+        </button>
+        <button type="button" class="mega-button" data-report="all">
+          <span>03</span>
+          <strong>Abrir resultados</strong>
+          <small>CSV/TXT de todas as etapas</small>
+        </button>
+      </div>
     </section>
 
     <section class="progress-panel panel">
@@ -185,6 +209,16 @@
           <p><span>&gt;</span> saida definida para /outputs</p>
           <p><span>&gt;</span> modulo Bling pronto para localizar GVI</p>
           <p><span>&gt;</span> operador autorizado</p>
+        </div>
+      </article>
+
+      <article class="panel live-panel">
+        <div class="panel-head">
+          <span>LIVE_PRODUCTS</span>
+          <b>AO VIVO</b>
+        </div>
+        <div class="live-list" id="liveList">
+          <p>Nenhum produto extraído ainda.</p>
         </div>
       </article>
 

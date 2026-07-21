@@ -11,6 +11,7 @@ const processDetail = document.querySelector("#processDetail");
 const progressBar = document.querySelector("#progressBar");
 const progressPercent = document.querySelector("#progressPercent");
 const progressCount = document.querySelector("#progressCount");
+const liveList = document.querySelector("#liveList");
 const flagInputs = [...document.querySelectorAll(".switch-list input")];
 
 const storageKey = "guCarRevolutPanelState";
@@ -34,6 +35,8 @@ const streamLines = [
 ];
 
 const runLabels = {
+  "fluxo-teste": "Fluxo rápido de teste",
+  "fluxo-completo": "Fluxo completo produtos + Bling",
   "lista-gvi": "Lista completa de produtos e GVI",
   "lista-gvi-teste": "Teste 1 página - produtos e GVI",
   clips: "Anúncios que precisam de clip",
@@ -197,6 +200,8 @@ function renderJobStatus(data) {
     progressCount.textContent = `${data.current || 0} / ${data.total || 0}`;
   }
 
+  renderLiveItems(data.live_items || []);
+
   consoleStream.innerHTML = "";
 
   logs.slice(-8).forEach((line) => {
@@ -213,6 +218,38 @@ function renderJobStatus(data) {
     lastOutputCount = data.outputs.total_anuncios;
     addConsoleLine(`base pronta: ${data.outputs.total_anuncios} anuncios no CSV`);
   }
+}
+
+function renderLiveItems(items) {
+  if (!liveList) {
+    return;
+  }
+
+  liveList.innerHTML = "";
+
+  if (!items.length) {
+    const p = document.createElement("p");
+    p.textContent = "Nenhum produto extraído ainda.";
+    liveList.appendChild(p);
+    return;
+  }
+
+  items.slice(-18).reverse().forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "live-item";
+
+    const name = document.createElement("strong");
+    name.textContent = item.produto || "Produto sem nome";
+
+    const sku = document.createElement("span");
+    sku.textContent = item.sku ? `SKU/GVI: ${item.sku}` : "SKU/GVI: aguardando";
+
+    const info = document.createElement("small");
+    info.textContent = item.info || item.stage || "Extraído";
+
+    row.append(name, sku, info);
+    liveList.appendChild(row);
+  });
 }
 
 async function refreshJobStatus() {
