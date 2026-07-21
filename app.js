@@ -5,6 +5,12 @@ const consoleStream = document.querySelector("#consoleStream");
 const bootLog = document.querySelector("#bootLog");
 const saveState = document.querySelector("#saveState");
 const lastSaved = document.querySelector("#lastSaved");
+const processState = document.querySelector("#processState");
+const processName = document.querySelector("#processName");
+const processDetail = document.querySelector("#processDetail");
+const progressBar = document.querySelector("#progressBar");
+const progressPercent = document.querySelector("#progressPercent");
+const progressCount = document.querySelector("#progressCount");
 const flagInputs = [...document.querySelectorAll(".switch-list input")];
 
 const storageKey = "guCarRevolutPanelState";
@@ -26,6 +32,28 @@ const streamLines = [
   "estoque: deposito e variacoes em standby",
   "operador pode iniciar proximo processo",
 ];
+
+const runLabels = {
+  "lista-gvi": "Lista completa de produtos e GVI",
+  clips: "Anúncios que precisam de clip",
+  estoque: "Estoque e variações",
+  bling: "GVI Locator - Bling",
+};
+
+const reportFiles = {
+  links: ["links_anuncios.csv", "links_anuncios.txt"],
+  clips: ["anuncios_precisam_clip_lista.csv", "anuncios_precisam_clip_lista.txt"],
+  estoque: ["estoque_variacoes.csv", "estoque_variacoes.txt"],
+  bling: ["fila_videos_com_localizacao.csv", "fila_videos_com_localizacao.txt"],
+  all: [
+    "links_anuncios.csv",
+    "links_anuncios.txt",
+    "anuncios_precisam_clip_lista.csv",
+    "anuncios_precisam_clip_lista.txt",
+    "fila_videos_com_localizacao.csv",
+    "fila_videos_com_localizacao.txt",
+  ],
+};
 
 let width = 0;
 let height = 0;
@@ -138,6 +166,32 @@ async function callApi(path, options = {}) {
 
 function renderJobStatus(data) {
   const logs = data.logs || [];
+  const percent = Number(data.percent || 0);
+
+  if (processState) {
+    processState.textContent = data.running ? "EM ANDAMENTO" : (data.returncode === 0 ? "CONCLUÍDO" : "AGUARDANDO");
+  }
+
+  if (processName) {
+    processName.textContent = data.name || "Nenhuma rotina em execução";
+  }
+
+  if (processDetail) {
+    processDetail.textContent = data.status_text || "Escolha uma etapa abaixo para iniciar.";
+  }
+
+  if (progressBar) {
+    progressBar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+  }
+
+  if (progressPercent) {
+    progressPercent.textContent = `${Math.round(percent)}%`;
+  }
+
+  if (progressCount) {
+    progressCount.textContent = `${data.current || 0} / ${data.total || 0}`;
+  }
+
   consoleStream.innerHTML = "";
 
   logs.slice(-8).forEach((line) => {
@@ -171,10 +225,15 @@ async function refreshJobStatus() {
 }
 
 async function startListaGvi() {
-  addConsoleLine("enviando comando para extrair lista completa + GVI...");
+  return startRun("lista-gvi");
+}
+
+async function startRun(runName) {
+  const label = runLabels[runName] || runName;
+  addConsoleLine(`enviando comando: ${label}...`);
 
   try {
-    const data = await callApi("/api/run/lista-gvi", {
+    const data = await callApi(`/api/run/${runName}`, {
       method: "POST",
     });
 
@@ -185,10 +244,12 @@ async function startListaGvi() {
   }
 }
 
-function abrirRelatorios() {
-  window.open(`${apiBase}/outputs/links_anuncios.csv`, "_blank");
-  window.open(`${apiBase}/outputs/links_anuncios.txt`, "_blank");
-  addConsoleLine("abrindo relatorios links_anuncios.csv e links_anuncios.txt");
+function abrirRelatorios(tipo = "links") {
+  const files = reportFiles[tipo] || reportFiles.links;
+  files.forEach((file) => {
+    window.open(`${apiBase}/outputs/${file}`, "_blank");
+  });
+  addConsoleLine(`abrindo relatorios: ${files.join(", ")}`);
 }
 
 function resize() {
@@ -268,14 +329,17 @@ function pulseBootLog() {
 document.querySelectorAll("button").forEach((button) => {
   button.addEventListener("click", () => {
     const texto = button.textContent.trim().toLowerCase();
+    const runName = button.dataset.run;
+    const reportName = button.dataset.report;
     addConsoleLine(`comando recebido: ${texto}`);
 
-    if (texto === "executar rotina" || texto === "ver base") {
-      startListaGvi();
+    if (runName) {
+      startRun(runName);
+      return;
     }
 
-    if (texto === "abrir relatorios") {
-      abrirRelatorios();
+    if (reportName) {
+      abrirRelatorios(reportName);
     }
   });
 });
