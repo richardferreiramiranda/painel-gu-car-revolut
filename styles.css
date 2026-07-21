@@ -27,7 +27,11 @@ body {
   margin: 0;
   color: var(--text);
   font-family: var(--mono);
-  background: var(--black);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.74) 0%, rgba(0, 0, 0, 0.36) 42%, rgba(0, 0, 0, 0.52) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.28) 48%, rgba(5, 4, 3, 0.96) 84%, #050403 100%),
+    url("assets/kraken-bg.png") center top / cover no-repeat fixed,
+    var(--black);
   overflow-x: hidden;
 }
 
@@ -35,22 +39,27 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -3;
-  background-image: url("assets/kraken-bg.png");
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.035) 0,
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+  mix-blend-mode: overlay;
+  opacity: 0.2;
 }
 
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -2;
+  z-index: 1;
   pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.74) 0%, rgba(0, 0, 0, 0.36) 42%, rgba(0, 0, 0, 0.52) 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.28) 48%, rgba(5, 4, 3, 0.96) 84%, #050403 100%);
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.78);
 }
 
 button,
@@ -69,10 +78,12 @@ button {
   height: 100%;
   opacity: 0.44;
   pointer-events: none;
-  z-index: -1;
+  z-index: 2;
 }
 
 .kraken-shell {
+  position: relative;
+  z-index: 3;
   min-height: 100vh;
   padding: 22px;
 }
