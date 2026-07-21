@@ -7,23 +7,23 @@ const saveState = document.querySelector("#saveState");
 const lastSaved = document.querySelector("#lastSaved");
 const flagInputs = [...document.querySelectorAll(".switch-list input")];
 
-const storageKey = "guCarRevolutPanelState";
+const storageKey = "krakenMlPanelState";
 
 const commands = [
-  "run --scan-clips --active",
-  "crawl --links --mercado-livre",
-  "extract --stock --variations",
-  "export --csv --txt --now",
-  "arm --chrome-port 9222",
+  "deploy --tentacles --active-listings",
+  "hunt --clips --three-dots-menu",
+  "crawl --ml-links --all-pages",
+  "locate --gvi --bling-stock-tab",
+  "export --video-queue --csv-txt",
 ];
 
 const streamLines = [
-  "chrome debugger handshake confirmado",
-  "listagem OMNI_ACTIVE localizada",
-  "tres pontinhos: rotina de clique armada",
-  "criando relatorio anuncios_precisam_clip_lista.csv",
-  "estoque: deposito e variacoes em standby",
-  "operador pode iniciar proximo processo",
+  "kraken ml mantendo sessao operacional",
+  "tentaculo clip hunter armado",
+  "listagem OMNI_ACTIVE sob vigilancia",
+  "bling locator pronto para capturar localizacao",
+  "fila de videos aguardando novos GVI",
+  "relatorios CSV/TXT sincronizados",
 ];
 
 let width = 0;
