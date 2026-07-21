@@ -35,9 +35,12 @@ const streamLines = [
 
 const runLabels = {
   "lista-gvi": "Lista completa de produtos e GVI",
+  "lista-gvi-teste": "Teste 1 página - produtos e GVI",
   clips: "Anúncios que precisam de clip",
+  "clips-teste": "Teste 1 página - clips",
   estoque: "Estoque e variações",
   bling: "GVI Locator - Bling",
+  "bling-teste": "Teste 10 itens - Bling",
 };
 
 const reportFiles = {
