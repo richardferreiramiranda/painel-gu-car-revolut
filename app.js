@@ -8,6 +8,7 @@ const lastSaved = document.querySelector("#lastSaved");
 const flagInputs = [...document.querySelectorAll(".switch-list input")];
 
 const storageKey = "guCarRevolutPanelState";
+const apiBase = "http://127.0.0.1:8765";
 
 const commands = [
   "run --scan-clips --active",
@@ -31,6 +32,7 @@ let height = 0;
 let commandIndex = 0;
 let charIndex = 0;
 let deleting = false;
+let lastOutputCount = null;
 
 function loadState() {
   try {
@@ -123,6 +125,72 @@ function addConsoleLine(text) {
   });
 }
 
+async function callApi(path, options = {}) {
+  const response = await fetch(`${apiBase}${path}`, options);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Falha ao comunicar com o motor local.");
+  }
+
+  return data;
+}
+
+function renderJobStatus(data) {
+  const logs = data.logs || [];
+  consoleStream.innerHTML = "";
+
+  logs.slice(-8).forEach((line) => {
+    const p = document.createElement("p");
+    p.innerHTML = `<span>&gt;</span> ${line}`;
+    consoleStream.appendChild(p);
+  });
+
+  if (
+    data.outputs
+    && data.outputs.csv_exists
+    && data.outputs.total_anuncios !== lastOutputCount
+  ) {
+    lastOutputCount = data.outputs.total_anuncios;
+    addConsoleLine(`base pronta: ${data.outputs.total_anuncios} anuncios no CSV`);
+  }
+}
+
+async function refreshJobStatus() {
+  try {
+    const data = await callApi("/api/status");
+
+    if (data.running || data.logs?.length) {
+      renderJobStatus(data);
+    }
+
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+async function startListaGvi() {
+  addConsoleLine("enviando comando para extrair lista completa + GVI...");
+
+  try {
+    const data = await callApi("/api/run/lista-gvi", {
+      method: "POST",
+    });
+
+    addConsoleLine(data.message);
+    refreshJobStatus();
+  } catch (error) {
+    addConsoleLine(`motor local offline ou ocupado: ${error.message}`);
+  }
+}
+
+function abrirRelatorios() {
+  window.open(`${apiBase}/outputs/links_anuncios.csv`, "_blank");
+  window.open(`${apiBase}/outputs/links_anuncios.txt`, "_blank");
+  addConsoleLine("abrindo relatorios links_anuncios.csv e links_anuncios.txt");
+}
+
 function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   width = window.innerWidth;
@@ -199,7 +267,16 @@ function pulseBootLog() {
 
 document.querySelectorAll("button").forEach((button) => {
   button.addEventListener("click", () => {
-    addConsoleLine(`comando recebido: ${button.textContent.trim().toLowerCase()}`);
+    const texto = button.textContent.trim().toLowerCase();
+    addConsoleLine(`comando recebido: ${texto}`);
+
+    if (texto === "executar rotina" || texto === "ver base") {
+      startListaGvi();
+    }
+
+    if (texto === "abrir relatorios") {
+      abrirRelatorios();
+    }
   });
 });
 
@@ -226,3 +303,4 @@ saveStateNow({
 });
 setInterval(appendStreamLine, 2200);
 setInterval(pulseBootLog, 900);
+setInterval(refreshJobStatus, 3000);
