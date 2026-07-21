@@ -35,8 +35,8 @@ const streamLines = [
 ];
 
 const runLabels = {
-  "fluxo-teste": "Fluxo rápido de teste",
-  "fluxo-completo": "Fluxo completo produtos + Bling",
+  "fluxo-teste": "Teste rápido Clip + GVI + Bling",
+  "fluxo-completo": "Fluxo completo Clip + GVI + Bling",
   "lista-gvi": "Lista completa de produtos e GVI",
   "lista-gvi-teste": "Teste 1 página - produtos e GVI",
   clips: "Anúncios que precisam de clip",
