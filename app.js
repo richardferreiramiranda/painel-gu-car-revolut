@@ -13,6 +13,8 @@ const progressPercent = document.querySelector("#progressPercent");
 const progressCount = document.querySelector("#progressCount");
 const liveList = document.querySelector("#liveList");
 const flagInputs = [...document.querySelectorAll(".switch-list input")];
+const extractorTiles = [...document.querySelectorAll("[data-module]")];
+const extractorPanels = [...document.querySelectorAll("[data-module-panel]")];
 
 const storageKey = "guCarRevolutPanelState";
 const apiBase = "http://127.0.0.1:8765";
@@ -42,20 +44,30 @@ const runLabels = {
   clips: "Anúncios que precisam de clip",
   "clips-teste": "Teste 1 página - clips",
   estoque: "Estoque e variações",
+  "clips-link": "Verificador de clips por link",
+  "clips-link-teste": "Teste 10 links - clips por link",
+  "estoque-teste": "Teste 1 pagina - estoque",
   bling: "GVI Locator - Bling",
   "bling-teste": "Teste 10 itens - Bling",
+  imagens: "Baixar imagens por planilha",
 };
 
 const reportFiles = {
   links: ["links_anuncios.csv", "links_anuncios.txt"],
   clips: ["anuncios_precisam_clip_lista.csv", "anuncios_precisam_clip_lista.txt"],
-  estoque: ["estoque_variacoes.csv", "estoque_variacoes.txt"],
+  clipsLink: ["anuncios_precisam_clip.csv", "anuncios_precisam_clip.txt"],
+  estoque: ["estoque_variacoes.txt"],
+  imagens: ["produtos_imagens.json"],
   bling: ["fila_videos_com_localizacao.csv", "fila_videos_com_localizacao.txt"],
   all: [
     "links_anuncios.csv",
     "links_anuncios.txt",
     "anuncios_precisam_clip_lista.csv",
     "anuncios_precisam_clip_lista.txt",
+    "anuncios_precisam_clip.csv",
+    "anuncios_precisam_clip.txt",
+    "estoque_variacoes.txt",
+    "produtos_imagens.json",
     "fila_videos_com_localizacao.csv",
     "fila_videos_com_localizacao.txt",
   ],
@@ -291,6 +303,20 @@ function abrirRelatorios(tipo = "links") {
   addConsoleLine(`abrindo relatorios: ${files.join(", ")}`);
 }
 
+function showExtractorModule(moduleName) {
+  extractorTiles.forEach((tile) => {
+    tile.classList.toggle("is-active", tile.dataset.module === moduleName);
+  });
+
+  extractorPanels.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.dataset.modulePanel === moduleName);
+  });
+
+  saveStateNow({
+    activeModule: moduleName,
+  });
+}
+
 function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   width = window.innerWidth;
@@ -376,6 +402,11 @@ document.querySelectorAll("button").forEach((button) => {
     const reportName = button.dataset.report;
     addConsoleLine(`comando recebido: ${texto}`);
 
+    if (button.dataset.module) {
+      showExtractorModule(button.dataset.module);
+      return;
+    }
+
     if (runName) {
       startRun(runName);
       return;
@@ -396,6 +427,7 @@ window.addEventListener("resize", resize);
 restoreFlags();
 restoreConsole();
 renderSaveState();
+showExtractorModule(loadState().activeModule || "fluxo");
 resize();
 drawNoise();
 typeLoop();
@@ -404,7 +436,9 @@ saveStateNow({
     "Clip Hunter",
     "Stock Extractor",
     "Link Crawler",
+    "Clip Link Checker",
     "GVI Locator",
+    "Image Downloader",
     "Video Queue",
   ],
 });

@@ -101,6 +101,170 @@
       </div>
     </section>
 
+    <section class="extractor-index panel">
+      <div class="panel-head">
+        <span>EXTRACTOR_INDEX</span>
+        <b>SELECIONE UM MODULO</b>
+      </div>
+      <div class="extractor-menu" role="tablist" aria-label="Extratores disponiveis">
+        <button type="button" class="extractor-tile is-active" data-module="fluxo">
+          <span class="module-logo">FX</span>
+          <strong>Fluxo Completo</strong>
+          <small>Clip + GVI + Bling</small>
+        </button>
+        <button type="button" class="extractor-tile" data-module="links">
+          <span class="module-logo">ML</span>
+          <strong>Links e GVI</strong>
+          <small>lista completa de anuncios</small>
+        </button>
+        <button type="button" class="extractor-tile" data-module="clips">
+          <span class="module-logo">CL</span>
+          <strong>Criar Clip</strong>
+          <small>menu dos tres pontinhos</small>
+        </button>
+        <button type="button" class="extractor-tile" data-module="clipsLink">
+          <span class="module-logo">LK</span>
+          <strong>Clip por Link</strong>
+          <small>verifica links ja coletados</small>
+        </button>
+        <button type="button" class="extractor-tile" data-module="estoque">
+          <span class="module-logo">ST</span>
+          <strong>Estoque</strong>
+          <small>deposito e variacoes</small>
+        </button>
+        <button type="button" class="extractor-tile" data-module="bling">
+          <span class="module-logo">BG</span>
+          <strong>Bling Locator</strong>
+          <small>GVI e localizacao</small>
+        </button>
+        <button type="button" class="extractor-tile" data-module="imagens">
+          <span class="module-logo">IMG</span>
+          <strong>Imagens</strong>
+          <small>planilha + Mercado Livre</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="extractor-workspace">
+      <article class="extractor-panel panel is-active" data-module-panel="fluxo">
+        <div class="extractor-hero">
+          <span class="module-logo is-large">FX</span>
+          <div>
+            <span>MODULO PRINCIPAL</span>
+            <h2>Fluxo Completo Clip + GVI + Bling</h2>
+            <p>Roda o processo inteiro: acha anuncios com Criar Clip/Incluir Clip, monta a fila com GVI e busca a localizacao no Bling.</p>
+          </div>
+        </div>
+        <div class="extractor-actions">
+          <button type="button" class="danger-button" data-run="fluxo-teste">Teste rapido</button>
+          <button type="button" class="danger-button" data-run="fluxo-completo">Rodar completo</button>
+          <button type="button" class="line-button" data-report="all">Abrir resultados</button>
+        </div>
+        <div class="extractor-files">Saidas: anuncios_precisam_clip_lista.csv, fila_videos_com_localizacao.csv</div>
+      </article>
+
+      <article class="extractor-panel panel" data-module-panel="links">
+        <div class="extractor-hero">
+          <span class="module-logo is-large">ML</span>
+          <div>
+            <span>EXTRATOR 01</span>
+            <h2>Links, nomes, codigos e GVI dos anuncios</h2>
+            <p>Percorre a listagem de anuncios ativos do Mercado Livre e gera uma base completa para os outros robos.</p>
+          </div>
+        </div>
+        <div class="extractor-actions">
+          <button type="button" class="danger-button" data-run="lista-gvi-teste">Testar 1 pagina</button>
+          <button type="button" class="danger-button" data-run="lista-gvi">Extrair tudo</button>
+          <button type="button" class="line-button" data-report="links">Abrir relatorio</button>
+        </div>
+        <div class="extractor-files">Saidas: links_anuncios.csv, links_anuncios.txt</div>
+      </article>
+
+      <article class="extractor-panel panel" data-module-panel="clips">
+        <div class="extractor-hero">
+          <span class="module-logo is-large">CL</span>
+          <div>
+            <span>EXTRATOR 02</span>
+            <h2>Anuncios que precisam de Criar Clip</h2>
+            <p>Clica nos tres pontinhos ao lado dos anuncios e salva apenas os que aparecem com Criar Clip ou Incluir Clip.</p>
+          </div>
+        </div>
+        <div class="extractor-actions">
+          <button type="button" class="danger-button" data-run="clips-teste">Testar 1 pagina</button>
+          <button type="button" class="danger-button" data-run="clips">Extrair tudo</button>
+          <button type="button" class="line-button" data-report="clips">Abrir relatorio</button>
+        </div>
+        <div class="extractor-files">Saidas: anuncios_precisam_clip_lista.csv, anuncios_precisam_clip_lista.txt</div>
+      </article>
+
+      <article class="extractor-panel panel" data-module-panel="clipsLink">
+        <div class="extractor-hero">
+          <span class="module-logo is-large">LK</span>
+          <div>
+            <span>EXTRATOR 03</span>
+            <h2>Verificador de clip por link</h2>
+            <p>Usa a lista de links ja coletados e abre cada anuncio individualmente para localizar a acao de clip.</p>
+          </div>
+        </div>
+        <div class="extractor-actions">
+          <button type="button" class="danger-button" data-run="clips-link-teste">Testar 10 links</button>
+          <button type="button" class="danger-button" data-run="clips-link">Verificar todos</button>
+          <button type="button" class="line-button" data-report="clipsLink">Abrir relatorio</button>
+        </div>
+        <div class="extractor-files">Saidas: anuncios_precisam_clip.csv, anuncios_precisam_clip.txt</div>
+      </article>
+
+      <article class="extractor-panel panel" data-module-panel="estoque">
+        <div class="extractor-hero">
+          <span class="module-logo is-large">ST</span>
+          <div>
+            <span>EXTRATOR 04</span>
+            <h2>Estoque, deposito e variacoes</h2>
+            <p>Abre a pagina de anuncios sem estoque nos depositos, expande as variacoes e extrai deposito/quantidade.</p>
+          </div>
+        </div>
+        <div class="extractor-actions">
+          <button type="button" class="danger-button" data-run="estoque-teste">Testar 1 pagina</button>
+          <button type="button" class="danger-button" data-run="estoque">Extrair tudo</button>
+          <button type="button" class="line-button" data-report="estoque">Abrir relatorio</button>
+        </div>
+        <div class="extractor-files">Saida: estoque_variacoes.txt</div>
+      </article>
+
+      <article class="extractor-panel panel" data-module-panel="bling">
+        <div class="extractor-hero">
+          <span class="module-logo is-large">BG</span>
+          <div>
+            <span>EXTRATOR 05</span>
+            <h2>Bling Locator por GVI</h2>
+            <p>Pesquisa o GVI no Bling, abre o produto, entra na aba interna Estoque e captura a localizacao fisica.</p>
+          </div>
+        </div>
+        <div class="extractor-actions">
+          <button type="button" class="danger-button" data-run="bling-teste">Testar 10 itens</button>
+          <button type="button" class="danger-button" data-run="bling">Localizar todos</button>
+          <button type="button" class="line-button" data-report="bling">Abrir relatorio</button>
+        </div>
+        <div class="extractor-files">Saidas: fila_videos_com_localizacao.csv, fila_videos_com_localizacao.txt</div>
+      </article>
+
+      <article class="extractor-panel panel" data-module-panel="imagens">
+        <div class="extractor-hero">
+          <span class="module-logo is-large">IMG</span>
+          <div>
+            <span>EXTRATOR 06</span>
+            <h2>Baixar imagens por planilha</h2>
+            <p>Le a planilha XLSX, acessa os links do Mercado Livre e salva imagens dos produtos junto com um JSON de controle.</p>
+          </div>
+        </div>
+        <div class="extractor-actions">
+          <button type="button" class="danger-button" data-run="imagens">Baixar imagens</button>
+          <button type="button" class="line-button" data-report="imagens">Abrir JSON</button>
+        </div>
+        <div class="extractor-files">Saidas: produtos_imagens.json, pasta imagens_salvas</div>
+      </article>
+    </section>
+
     <section class="progress-panel panel">
       <div class="panel-head">
         <span>PROCESS_STATUS</span>
