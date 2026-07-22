@@ -9,7 +9,38 @@
 <body>
   <canvas id="noiseCanvas" aria-hidden="true"></canvas>
 
-  <main class="terminal-shell">
+  <section class="login-gate" id="loginGate">
+    <div class="login-card panel">
+      <div class="login-brand">
+        <img class="login-logo" src="assets/kraken-logo.png" alt="Kraken Fire Control Panel" />
+        <div>
+          <small>SECURE ACCESS</small>
+          <h1>KRAKEN FIRE</h1>
+          <p>Central de extratores Mercado Livre e Bling</p>
+        </div>
+      </div>
+
+      <form class="login-form" id="loginForm">
+        <label>
+          <span>operador</span>
+          <input id="loginUser" name="user" type="text" autocomplete="username" placeholder="admin" required />
+        </label>
+        <label>
+          <span>senha</span>
+          <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="••••••" required />
+        </label>
+        <p class="login-error" id="loginError">acesso negado</p>
+        <button type="submit" class="danger-button">Entrar no painel</button>
+      </form>
+
+      <div class="login-hint">
+        <span>usuario: admin</span>
+        <span>senha: 1234</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="terminal-shell is-locked" id="appShell">
     <header class="terminal-top">
       <div class="window-controls" aria-hidden="true">
         <span></span>
@@ -20,7 +51,10 @@
         <strong>PAINEL DE CONTROLE GU CAR REVOLUT</strong>
         <small>mercado-livre-automation://root/session</small>
       </div>
-      <div class="terminal-badge">ONLINE</div>
+      <div class="terminal-actions">
+        <div class="terminal-badge">ONLINE</div>
+        <button type="button" class="logout-button" id="logoutButton">SAIR</button>
+      </div>
     </header>
 
     <section class="hero-terminal">

@@ -1,5 +1,12 @@
 const canvas = document.querySelector("#noiseCanvas");
 const ctx = canvas.getContext("2d");
+const loginGate = document.querySelector("#loginGate");
+const appShell = document.querySelector("#appShell");
+const loginForm = document.querySelector("#loginForm");
+const loginUser = document.querySelector("#loginUser");
+const loginPassword = document.querySelector("#loginPassword");
+const loginError = document.querySelector("#loginError");
+const logoutButton = document.querySelector("#logoutButton");
 const typedCommand = document.querySelector("#typedCommand");
 const consoleStream = document.querySelector("#consoleStream");
 const bootLog = document.querySelector("#bootLog");
@@ -17,7 +24,12 @@ const extractorTiles = [...document.querySelectorAll("[data-module]")];
 const extractorPanels = [...document.querySelectorAll("[data-module-panel]")];
 
 const storageKey = "guCarRevolutPanelState";
+const authKey = "guCarRevolutAuth";
 const apiBase = "http://127.0.0.1:8765";
+const loginCredentials = {
+  user: "admin",
+  password: "1234",
+};
 
 const commands = [
   "run --scan-clips --active",
@@ -170,6 +182,57 @@ function addConsoleLine(text) {
     console: serializeConsole(),
     lastCommand: text,
   });
+}
+
+function isAuthenticated() {
+  try {
+    const auth = JSON.parse(localStorage.getItem(authKey));
+    return Boolean(auth && auth.ok);
+  } catch {
+    return false;
+  }
+}
+
+function renderAuthState() {
+  const authenticated = isAuthenticated();
+
+  if (loginGate) {
+    loginGate.classList.toggle("is-hidden", authenticated);
+  }
+
+  if (appShell) {
+    appShell.classList.toggle("is-locked", !authenticated);
+  }
+}
+
+function handleLogin(event) {
+  event.preventDefault();
+
+  const user = loginUser.value.trim();
+  const password = loginPassword.value.trim();
+
+  if (user === loginCredentials.user && password === loginCredentials.password) {
+    localStorage.setItem(authKey, JSON.stringify({
+      ok: true,
+      user,
+      loggedAt: new Date().toISOString(),
+    }));
+    loginError.classList.remove("is-visible");
+    addConsoleLine(`operador autenticado: ${user}`);
+    renderAuthState();
+    return;
+  }
+
+  loginError.classList.add("is-visible");
+  loginPassword.value = "";
+  loginPassword.focus();
+}
+
+function logout() {
+  localStorage.removeItem(authKey);
+  addConsoleLine("sessao encerrada pelo operador");
+  renderAuthState();
+  loginUser.focus();
 }
 
 async function callApi(path, options = {}) {
@@ -422,11 +485,20 @@ flagInputs.forEach((input) => {
   input.addEventListener("change", persistFlags);
 });
 
+if (loginForm) {
+  loginForm.addEventListener("submit", handleLogin);
+}
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", logout);
+}
+
 window.addEventListener("resize", resize);
 
 restoreFlags();
 restoreConsole();
 renderSaveState();
+renderAuthState();
 showExtractorModule(loadState().activeModule || "fluxo");
 resize();
 drawNoise();
