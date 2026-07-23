@@ -47,16 +47,8 @@
       <div class="hero-copy">
         <span class="eyebrow">// interface cognitiva fictícia</span>
         <h1>Seu segundo cérebro<br /><em>para o Mercado Livre</em></h1>
-        <p>Um centro neural que observa, indexa e organiza produtos em tempo real —
-           e monta sua fila final de vídeos com um clique. Tudo simulado, só o visual.</p>
-
-        <div class="hero-actions">
-          <button type="button" class="btn btn-primary" data-run="sync">
-            <span class="btn-glow"></span>Sincronizar cérebro
-          </button>
-          <button type="button" class="btn btn-ghost" data-run="extract">Extrair produtos</button>
-          <button type="button" class="btn btn-ghost" data-run="bling">Localizar no Bling</button>
-        </div>
+        <p>Um núcleo central que conecta cada agente de extração — clique em um nó para
+           ativar a rotina, ou no núcleo para sincronizar tudo de uma vez.</p>
 
         <div class="hero-stats">
           <div class="stat"><b class="stat-value" data-count="865">0</b><span>produtos indexados</span></div>
@@ -65,17 +57,54 @@
         </div>
       </div>
 
-      <div class="hero-core" aria-hidden="true">
-        <div class="core-orbit orbit-1"><span></span></div>
-        <div class="core-orbit orbit-2"><span></span></div>
-        <div class="core-orbit orbit-3"><span></span></div>
-        <div class="core-ring ring-a"></div>
-        <div class="core-ring ring-b"></div>
-        <div class="core-ring ring-c"></div>
-        <div class="core-bulb">
-          <b id="corePct">100%</b>
-          <small>coerência</small>
-        </div>
+      <div class="diamond-stage" id="diamondStage">
+        <svg class="diamond-lines" id="diamondLines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+
+        <button type="button" class="diamond-core" id="diamondCore" aria-label="Sincronizar núcleo cognitivo">
+          <span class="diamond-glow" aria-hidden="true"></span>
+          <span class="diamond-spin" aria-hidden="true">
+            <svg class="diamond-gem" viewBox="0 0 120 160">
+              <defs>
+                <linearGradient id="gemA" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f6ecff" />
+                  <stop offset="100%" stop-color="#b98bff" />
+                </linearGradient>
+                <linearGradient id="gemB" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#c084fc" />
+                  <stop offset="100%" stop-color="#7c3aed" />
+                </linearGradient>
+                <linearGradient id="gemC" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#a855f7" />
+                  <stop offset="100%" stop-color="#5b21b6" />
+                </linearGradient>
+                <linearGradient id="gemD" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#e879f9" />
+                  <stop offset="100%" stop-color="#86198f" />
+                </linearGradient>
+              </defs>
+              <polygon points="60,6 28,40 10,46" fill="url(#gemA)" opacity="0.92" />
+              <polygon points="60,6 28,40 92,40" fill="url(#gemB)" opacity="0.98" />
+              <polygon points="60,6 92,40 110,46" fill="url(#gemA)" opacity="0.8" />
+              <polygon points="10,46 28,40 34,100 60,154" fill="url(#gemC)" opacity="0.9" />
+              <polygon points="28,40 92,40 86,100 34,100" fill="url(#gemD)" opacity="1" />
+              <polygon points="92,40 110,46 86,100 60,154" fill="url(#gemC)" opacity="0.75" />
+              <g stroke="rgba(255,255,255,0.45)" stroke-width="1" fill="none" stroke-linejoin="round">
+                <polygon points="60,6 28,40 10,46" />
+                <polygon points="60,6 28,40 92,40" />
+                <polygon points="60,6 92,40 110,46" />
+                <polygon points="10,46 28,40 34,100 60,154" />
+                <polygon points="28,40 92,40 86,100 34,100" />
+                <polygon points="92,40 110,46 86,100 60,154" />
+              </g>
+            </svg>
+          </span>
+          <span class="diamond-readout">
+            <b id="corePct">100%</b>
+            <small>coerência</small>
+          </span>
+        </button>
+
+        <div class="diamond-nodes" id="diamondNodes"></div>
       </div>
     </section>
 
@@ -149,15 +178,6 @@
           <p><span>›</span> aguardando comando do operador</p>
         </div>
       </article>
-    </section>
-
-    <!-- ===================== MÓDULOS ===================== -->
-    <section class="card modules">
-      <div class="card-head">
-        <span>neurônios / módulos</span>
-        <b class="tag tag-cyan">7 ativos</b>
-      </div>
-      <div class="module-grid" id="moduleGrid"></div>
     </section>
 
     <footer class="footer">

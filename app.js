@@ -31,7 +31,11 @@ const barCount = document.querySelector("#barCount");
 
 const liveFeed = document.querySelector("#liveFeed");
 const consoleEl = document.querySelector("#console");
-const moduleGrid = document.querySelector("#moduleGrid");
+
+const diamondLines = document.querySelector("#diamondLines");
+const diamondNodes = document.querySelector("#diamondNodes");
+const diamondCore = document.querySelector("#diamondCore");
+const corePctEl = document.querySelector("#corePct");
 
 /* ==========================================================================
    BANCO DE DADOS FICTICIO — pecas automotivas
@@ -174,12 +178,6 @@ function runExtraction({ nome, statusText = "Processando", total, download = fal
   }, 240);
 }
 
-const runProfiles = {
-  sync: { nome: "Sincronizar cérebro", total: 30 },
-  extract: { nome: "Extrair produtos do Mercado Livre", total: 40 },
-  bling: { nome: "Localizar no Bling", total: 50, download: true },
-};
-
 /* ==========================================================================
    .TXT
    ========================================================================== */
@@ -235,32 +233,82 @@ function gerarListaFinal() {
 }
 
 /* ==========================================================================
-   MODULOS
+   REDE RADIAL DO DIAMANTE — agentes conectados ao nucleo
    ========================================================================== */
 const modulos = [
-  { ico: "FX", nome: "Fluxo Completo", desc: "Clip + GVI + Bling", total: 24 },
-  { ico: "ML", nome: "Links e GVI", desc: "lista completa de anúncios", total: 60 },
-  { ico: "CL", nome: "Criar Clip", desc: "menu dos três pontinhos", total: 34 },
-  { ico: "LK", nome: "Clip por Link", desc: "verifica links coletados", total: 28 },
-  { ico: "ST", nome: "Estoque", desc: "depósito e variações", total: 40 },
-  { ico: "BG", nome: "Bling Locator", desc: "GVI e localização", total: 50 },
-  { ico: "IMG", nome: "Imagens", desc: "planilha + Mercado Livre", total: 24 },
+  { ico: "CL", nome: "Clip Hunter", desc: "menu dos três pontinhos", code: "scan(--clip)", total: 34 },
+  { ico: "ST", nome: "Stock Extractor", desc: "depósito e variações", code: "read(--stock)", total: 40 },
+  { ico: "ML", nome: "Link Crawler", desc: "lista completa de anúncios", code: "crawl(--links)", total: 60 },
+  { ico: "LK", nome: "Clip Link Checker", desc: "verifica links coletados", code: "verify(--clip)", total: 28 },
+  { ico: "BG", nome: "GVI Locator", desc: "localização no Bling", code: "find(--gvi)", total: 50 },
+  { ico: "IMG", nome: "Image Downloader", desc: "planilha + Mercado Livre", code: "fetch(--img)", total: 24 },
+  { ico: "VD", nome: "Video Queue", desc: "fila final de gravação", code: "queue(--video)", total: 22 },
 ];
-function montarModulos() {
-  moduleGrid.innerHTML = "";
-  modulos.forEach((m) => {
-    const el = document.createElement("div");
-    el.className = "module";
-    el.innerHTML =
-      `<div class="module-ico">${m.ico}</div>` +
+
+function montarDiamante() {
+  const n = modulos.length;
+  const cx = 50;
+  const cy = 50;
+  const raio = 40;
+  let linhasSvg = "";
+
+  diamondNodes.innerHTML = "";
+
+  modulos.forEach((m, i) => {
+    const angulo = ((-90 + (360 / n) * i) * Math.PI) / 180;
+    const x = cx + raio * Math.cos(angulo);
+    const y = cy + raio * Math.sin(angulo);
+
+    linhasSvg += `<line class="d-link" data-idx="${i}" x1="${cx}" y1="${cy}" x2="${x.toFixed(2)}" y2="${y.toFixed(2)}"></line>`;
+
+    const node = document.createElement("button");
+    node.type = "button";
+    node.className = "d-node";
+    node.style.left = `${x}%`;
+    node.style.top = `${y}%`;
+    node.dataset.idx = String(i);
+    node.innerHTML =
+      `<span class="d-node-ico">${m.ico}</span>` +
       `<strong>${m.nome}</strong>` +
-      `<small>${m.desc}</small>` +
-      `<span class="m-state">● ativo</span>`;
-    el.addEventListener("click", () =>
-      runExtraction({ nome: m.nome, statusText: "Processando", total: m.total })
-    );
-    moduleGrid.appendChild(el);
+      `<code>${m.code}</code>` +
+      `<small>${m.desc}</small>`;
+    node.addEventListener("click", () => ativarNo(i, m));
+    diamondNodes.appendChild(node);
   });
+
+  diamondLines.innerHTML = linhasSvg;
+}
+
+function limparAtivos() {
+  document.querySelectorAll(".d-link.is-active, .d-node.is-active").forEach((el) => el.classList.remove("is-active"));
+}
+
+function ativarNo(idx, m) {
+  limparAtivos();
+  const linha = diamondLines.querySelector(`.d-link[data-idx="${idx}"]`);
+  const node = diamondNodes.querySelector(`.d-node[data-idx="${idx}"]`);
+  if (linha) linha.classList.add("is-active");
+  if (node) node.classList.add("is-active");
+
+  runExtraction({ nome: m.nome, statusText: "Processando", total: m.total });
+}
+
+function ativarNucleo() {
+  document.querySelectorAll(".d-link").forEach((el) => el.classList.add("is-active"));
+  document.querySelectorAll(".d-node").forEach((el) => el.classList.add("is-active"));
+  diamondCore.classList.add("is-spinning-fast");
+
+  const total = 42;
+  runExtraction({ nome: "Sincronizar núcleo cognitivo", statusText: "Sincronizando", total });
+
+  setTimeout(() => {
+    limparAtivos();
+    diamondCore.classList.remove("is-spinning-fast");
+  }, total * 240 + 400);
+}
+
+if (diamondCore) {
+  diamondCore.addEventListener("click", ativarNucleo);
 }
 
 /* ==========================================================================
@@ -374,13 +422,6 @@ function revelarApp() {
 /* ==========================================================================
    EVENTOS
    ========================================================================== */
-document.querySelectorAll("button[data-run]").forEach((b) => {
-  b.addEventListener("click", () => {
-    const p = runProfiles[b.dataset.run];
-    if (p) runExtraction({ nome: p.nome, statusText: "Processando", total: p.total, download: Boolean(p.download) });
-  });
-});
-
 document.querySelectorAll(".stepper[data-step]").forEach((b) => {
   b.addEventListener("click", () => {
     genQty.value = Math.max(1, Math.min(500, lerQuantidade() + Number(b.dataset.step)));
@@ -411,10 +452,13 @@ window.addEventListener("resize", resizeCanvas);
    START
    ========================================================================== */
 if (yearEl) yearEl.textContent = new Date().getFullYear();
-montarModulos();
+montarDiamante();
 marcarQuick();
 resizeCanvas();
 drawNeural();
 tickClock();
 setInterval(tickClock, 1000);
+setInterval(() => {
+  if (corePctEl) corePctEl.textContent = `${rand(96, 100)}%`;
+}, 2600);
 runBoot();
