@@ -1,519 +1,420 @@
-const canvas = document.querySelector("#noiseCanvas");
-const ctx = canvas.getContext("2d");
-const loginGate = document.querySelector("#loginGate");
-const appShell = document.querySelector("#appShell");
-const loginForm = document.querySelector("#loginForm");
-const loginUser = document.querySelector("#loginUser");
-const loginPassword = document.querySelector("#loginPassword");
-const loginError = document.querySelector("#loginError");
-const logoutButton = document.querySelector("#logoutButton");
-const typedCommand = document.querySelector("#typedCommand");
-const consoleStream = document.querySelector("#consoleStream");
-const bootLog = document.querySelector("#bootLog");
-const saveState = document.querySelector("#saveState");
-const lastSaved = document.querySelector("#lastSaved");
-const processState = document.querySelector("#processState");
-const processName = document.querySelector("#processName");
-const processDetail = document.querySelector("#processDetail");
-const progressBar = document.querySelector("#progressBar");
-const progressPercent = document.querySelector("#progressPercent");
-const progressCount = document.querySelector("#progressCount");
-const liveList = document.querySelector("#liveList");
-const flagInputs = [...document.querySelectorAll(".switch-list input")];
-const extractorTiles = [...document.querySelectorAll("[data-module]")];
-const extractorPanels = [...document.querySelectorAll("[data-module-panel]")];
+/* ==========================================================================
+   SECOND BRAIN · GU CAR REVOLUT — interface cognitiva ficticia (self-contained)
+   Sem backend. Roda direto no GitHub Pages / file://.
+   Reais de verdade: (1) tela LIVE de extracao simulada em tempo real
+   e (2) gerador de lista final em .txt a partir do campo numerico.
+   ========================================================================== */
 
-const storageKey = "guCarRevolutPanelState";
-const authKey = "guCarRevolutAuth";
-const apiBase = "http://127.0.0.1:8765";
-const loginCredentials = {
-  user: "admin",
-  password: "1234",
-};
+/* ----- elementos ----- */
+const neuralCanvas = document.querySelector("#neuralCanvas");
+const nctx = neuralCanvas.getContext("2d");
 
-const commands = [
-  "run --scan-clips --active",
-  "crawl --links --mercado-livre",
-  "extract --stock --variations",
-  "export --csv --txt --now",
-  "arm --chrome-port 9222",
+const bootScreen = document.querySelector("#bootScreen");
+const bootText = document.querySelector("#bootText");
+const bootBar = document.querySelector("#bootBar");
+const shell = document.querySelector("#shell");
+
+const clockEl = document.querySelector("#clock");
+const yearEl = document.querySelector("#year");
+
+const genQty = document.querySelector("#genQty");
+const genGo = document.querySelector("#genGo");
+const genHint = document.querySelector("#genHint");
+
+const procCard = document.querySelector(".card.progress");
+const procState = document.querySelector("#procState");
+const procName = document.querySelector("#procName");
+const procDetail = document.querySelector("#procDetail");
+const barFill = document.querySelector("#barFill");
+const barPct = document.querySelector("#barPct");
+const barCount = document.querySelector("#barCount");
+
+const liveFeed = document.querySelector("#liveFeed");
+const consoleEl = document.querySelector("#console");
+const moduleGrid = document.querySelector("#moduleGrid");
+
+/* ==========================================================================
+   BANCO DE DADOS FICTICIO — pecas automotivas
+   ========================================================================== */
+const pecas = [
+  "Farol", "Lanterna", "Retrovisor", "Parachoque", "Amortecedor",
+  "Pastilha de Freio", "Disco de Freio", "Bomba de Agua", "Radiador",
+  "Filtro de Ar", "Vela de Ignicao", "Correia Dentada", "Coxim do Motor",
+  "Bieleta", "Bandeja de Suspensao", "Terminal de Direcao", "Kit Embreagem",
+  "Bobina de Ignicao", "Sensor de Fase", "Bico Injetor", "Alternador",
+  "Motor de Partida", "Junta do Cabecote", "Valvula Termostatica",
+  "Cilindro Mestre", "Rolamento de Roda", "Junta Homocinetica", "Cabo de Vela",
 ];
-
-const streamLines = [
-  "chrome debugger handshake confirmado",
-  "listagem OMNI_ACTIVE localizada",
-  "tres pontinhos: rotina de clique armada",
-  "criando relatorio anuncios_precisam_clip_lista.csv",
-  "estoque: deposito e variacoes em standby",
-  "operador pode iniciar proximo processo",
+const posicoes = [
+  "Dianteiro Esquerdo", "Dianteiro Direito", "Dianteira",
+  "Traseiro Esquerdo", "Traseiro Direito", "Traseira", "",
 ];
+const carros = [
+  "Gol G5", "Onix 1.4", "HB20 1.6", "Civic G9", "Corolla 2015", "Palio Fire",
+  "Uno Way", "Strada 1.4", "Saveiro Cross", "Ka SE", "Fiesta 1.6", "Cruze LT",
+  "Compass 2.0", "Renegade 1.8", "Toro Volcano", "Sandero 1.0", "Kwid Zen",
+  "Mobi Like", "Argo Drive", "Polo TSI", "Nivus Highline", "Tracker Premier",
+];
+const corredores = ["A", "B", "C", "D", "E", "F", "G"];
+const clipTipos = ["Criar Clip", "Incluir Clip"];
 
-const runLabels = {
-  "fluxo-teste": "Teste rápido Clip + GVI + Bling",
-  "fluxo-completo": "Fluxo completo Clip + GVI + Bling",
-  "lista-gvi": "Lista completa de produtos e GVI",
-  "lista-gvi-teste": "Teste 1 página - produtos e GVI",
-  clips: "Anúncios que precisam de clip",
-  "clips-teste": "Teste 1 página - clips",
-  estoque: "Estoque e variações",
-  "clips-link": "Verificador de clips por link",
-  "clips-link-teste": "Teste 10 links - clips por link",
-  "estoque-teste": "Teste 1 pagina - estoque",
-  bling: "GVI Locator - Bling",
-  "bling-teste": "Teste 10 itens - Bling",
-  imagens: "Baixar imagens por planilha",
-};
+const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const pick = (l) => l[Math.floor(Math.random() * l.length)];
+const pad = (n, s) => String(n).padStart(s, "0");
 
-const reportFiles = {
-  links: ["links_anuncios.csv", "links_anuncios.txt"],
-  clips: ["anuncios_precisam_clip_lista.csv", "anuncios_precisam_clip_lista.txt"],
-  clipsLink: ["anuncios_precisam_clip.csv", "anuncios_precisam_clip.txt"],
-  estoque: ["estoque_variacoes.txt"],
-  imagens: ["produtos_imagens.json"],
-  bling: ["fila_videos_com_localizacao.csv", "fila_videos_com_localizacao.txt"],
-  all: [
-    "links_anuncios.csv",
-    "links_anuncios.txt",
-    "anuncios_precisam_clip_lista.csv",
-    "anuncios_precisam_clip_lista.txt",
-    "anuncios_precisam_clip.csv",
-    "anuncios_precisam_clip.txt",
-    "estoque_variacoes.txt",
-    "produtos_imagens.json",
-    "fila_videos_com_localizacao.csv",
-    "fila_videos_com_localizacao.txt",
-  ],
-};
-
-let width = 0;
-let height = 0;
-let commandIndex = 0;
-let charIndex = 0;
-let deleting = false;
-let lastOutputCount = null;
-let jobIsActive = false;
-
-function loadState() {
-  try {
-    return JSON.parse(localStorage.getItem(storageKey)) || {};
-  } catch {
-    return {};
-  }
-}
-
-function saveStateNow(patch = {}) {
-  const current = loadState();
-  const next = {
-    ...current,
-    ...patch,
-    updatedAt: new Date().toISOString(),
+function gerarProduto(indice) {
+  const peca = pick(pecas);
+  const posicao = Math.random() < 0.55 ? " " + pick(posicoes) : "";
+  const carro = pick(carros);
+  const nome = `${peca}${posicao} ${carro}`.replace(/\s+/g, " ").trim();
+  return {
+    indice,
+    nome,
+    gvi: "GVI-" + rand(1000, 9999),
+    codigo: "MLB" + rand(100000000, 999999999),
+    estoque: rand(0, 42),
+    localizacao: `Corredor ${pick(corredores)} · Prat. ${rand(1, 9)} · Box ${rand(1, 45)}`,
+    clip: pick(clipTipos),
   };
-
-  localStorage.setItem(storageKey, JSON.stringify(next));
-  renderSaveState(next);
 }
 
-function renderSaveState(state = loadState()) {
-  if (!lastSaved || !saveState) {
-    return;
-  }
-
-  if (!state.updatedAt) {
-    lastSaved.textContent = "sem checkpoint";
-    saveState.textContent = "READY";
-    return;
-  }
-
-  lastSaved.textContent = new Date(state.updatedAt).toLocaleString("pt-BR");
-  saveState.textContent = "SYNCED";
-}
-
-function restoreFlags() {
-  const state = loadState();
-
-  if (!state.flags) {
-    return;
-  }
-
-  flagInputs.forEach((input, index) => {
-    if (typeof state.flags[index] === "boolean") {
-      input.checked = state.flags[index];
-    }
-  });
-}
-
-function persistFlags() {
-  saveStateNow({
-    flags: flagInputs.map((input) => input.checked),
-  });
-}
-
-function serializeConsole() {
-  return [...consoleStream.querySelectorAll("p")]
-    .slice(-8)
-    .map((p) => p.innerHTML);
-}
-
-function restoreConsole() {
-  const state = loadState();
-
-  if (!state.console || !state.console.length) {
-    return;
-  }
-
-  consoleStream.innerHTML = "";
-  state.console.forEach((line) => {
-    const p = document.createElement("p");
-    p.innerHTML = line;
-    consoleStream.appendChild(p);
-  });
-}
-
-function addConsoleLine(text) {
+/* ==========================================================================
+   CONSOLE
+   ========================================================================== */
+function addConsole(text) {
   const p = document.createElement("p");
-  p.innerHTML = `<span>&gt;</span> ${text}`;
-  consoleStream.appendChild(p);
+  p.innerHTML = `<span>&rsaquo;</span> ${text}`;
+  consoleEl.appendChild(p);
+  while (consoleEl.children.length > 10) consoleEl.removeChild(consoleEl.firstElementChild);
+  consoleEl.scrollTop = consoleEl.scrollHeight;
+}
 
-  while (consoleStream.children.length > 8) {
-    consoleStream.removeChild(consoleStream.firstElementChild);
-  }
+/* ==========================================================================
+   TELA LIVE
+   ========================================================================== */
+function resetLive() {
+  liveFeed.innerHTML = "";
+}
+function addLiveItem(p) {
+  const row = document.createElement("div");
+  row.className = "live-item";
 
-  saveStateNow({
-    console: serializeConsole(),
-    lastCommand: text,
+  const name = document.createElement("span");
+  name.className = "li-name";
+  name.textContent = `${pad(p.indice, 3)} · ${p.nome}`;
+
+  const meta = document.createElement("div");
+  meta.className = "li-meta";
+  meta.innerHTML =
+    `<span class="chip gvi">${p.gvi}</span>` +
+    `<span class="chip clip">${p.clip}</span>` +
+    `<span class="chip">estoque ${p.estoque} un</span>` +
+    `<span class="chip loc">${p.localizacao}</span>`;
+
+  row.append(name, meta);
+  liveFeed.insertBefore(row, liveFeed.firstChild);
+  while (liveFeed.children.length > 40) liveFeed.removeChild(liveFeed.lastChild);
+}
+
+/* ==========================================================================
+   MOTOR FICTICIO DE EXTRACAO
+   ========================================================================== */
+let activeTimer = null;
+let jobIsActive = false;
+let ultimaLista = [];
+
+function setProgress(current, total, statusText) {
+  const percent = total ? Math.min(100, Math.round((current / total) * 100)) : 0;
+  barFill.style.width = `${percent}%`;
+  barPct.textContent = `${percent}%`;
+  barCount.textContent = `${current} / ${total}`;
+  if (statusText) procDetail.textContent = statusText;
+}
+
+function pararJob() {
+  if (activeTimer) clearInterval(activeTimer);
+  activeTimer = null;
+  jobIsActive = false;
+}
+
+function runExtraction({ nome, statusText = "Processando", total, download = false, arquivo = "fila_videos_com_localizacao.txt" }) {
+  pararJob();
+  resetLive();
+  ultimaLista = [];
+  jobIsActive = true;
+
+  procCard.classList.add("is-running");
+  procState.textContent = "em execução";
+  procName.textContent = nome;
+  addConsole(`iniciando: ${nome} (${total} itens)`);
+  setProgress(0, total, `${statusText} 1 de ${total}`);
+
+  let atual = 0;
+  const passo = Math.max(1, Math.round(total / 6));
+  activeTimer = setInterval(() => {
+    atual += 1;
+    const produto = gerarProduto(atual);
+    ultimaLista.push(produto);
+    addLiveItem(produto);
+    if (atual <= 2 || atual % passo === 0) addConsole(`extraído: ${produto.nome} | ${produto.gvi}`);
+    setProgress(atual, total, `${statusText} ${atual} de ${total}`);
+
+    if (atual >= total) {
+      pararJob();
+      procCard.classList.remove("is-running");
+      procState.textContent = "concluído";
+      procDetail.textContent = `Fila pronta com ${total} produtos.`;
+      addConsole(`base pronta: ${total} produtos na fila final`);
+      if (download) {
+        downloadTxt(arquivo, buildTxt(ultimaLista));
+        addConsole(`arquivo gerado: ${arquivo}`);
+        if (genHint) genHint.innerHTML = `Baixado: <b>${arquivo}</b> — ${total} produtos.`;
+      }
+    }
+  }, 240);
+}
+
+const runProfiles = {
+  sync: { nome: "Sincronizar cérebro", total: 30 },
+  extract: { nome: "Extrair produtos do Mercado Livre", total: 40 },
+  bling: { nome: "Localizar no Bling", total: 50, download: true },
+};
+
+/* ==========================================================================
+   .TXT
+   ========================================================================== */
+function buildTxt(itens) {
+  const L = [];
+  L.push("========================================================");
+  L.push("  FILA DE VIDEOS COM LOCALIZACAO - GU CAR REVOLUT");
+  L.push("========================================================");
+  L.push(`  Gerado em     : ${new Date().toLocaleString("pt-BR")}`);
+  L.push(`  Total produtos: ${itens.length}`);
+  L.push("========================================================");
+  L.push("");
+  itens.forEach((p) => {
+    L.push(`${pad(p.indice, 3)} | ${p.nome}`);
+    L.push(`      Codigo do anuncio : ${p.codigo}`);
+    L.push(`      GVI / SKU         : ${p.gvi}`);
+    L.push(`      Precisa de        : ${p.clip}`);
+    L.push(`      Estoque Bling     : ${p.estoque} un`);
+    L.push(`      Localizacao       : ${p.localizacao}`);
+    L.push("--------------------------------------------------------");
+  });
+  L.push("");
+  L.push(`Fim da fila - ${itens.length} produtos.`);
+  return L.join("\r\n");
+}
+function downloadTxt(nome, conteudo) {
+  const blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = nome;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+function lerQuantidade() {
+  let q = parseInt(genQty?.value, 10);
+  if (!Number.isFinite(q)) q = 30;
+  q = Math.max(1, Math.min(500, q));
+  if (genQty) genQty.value = q;
+  return q;
+}
+function gerarListaFinal() {
+  const q = lerQuantidade();
+  if (genHint) genHint.innerHTML = `Gerando <b>${q}</b> produtos…`;
+  runExtraction({
+    nome: `Gerar lista final (${q} produtos)`,
+    statusText: "Extraindo produto",
+    total: q,
+    download: true,
   });
 }
 
-function isAuthenticated() {
-  try {
-    const auth = JSON.parse(localStorage.getItem(authKey));
-    return Boolean(auth && auth.ok);
-  } catch {
-    return false;
-  }
-}
-
-function renderAuthState() {
-  const authenticated = isAuthenticated();
-
-  if (loginGate) {
-    loginGate.classList.toggle("is-hidden", authenticated);
-  }
-
-  if (appShell) {
-    appShell.classList.toggle("is-locked", !authenticated);
-  }
-}
-
-function handleLogin(event) {
-  event.preventDefault();
-
-  const user = loginUser.value.trim();
-  const password = loginPassword.value.trim();
-
-  if (user === loginCredentials.user && password === loginCredentials.password) {
-    localStorage.setItem(authKey, JSON.stringify({
-      ok: true,
-      user,
-      loggedAt: new Date().toISOString(),
-    }));
-    loginError.classList.remove("is-visible");
-    addConsoleLine(`operador autenticado: ${user}`);
-    renderAuthState();
-    return;
-  }
-
-  loginError.classList.add("is-visible");
-  loginPassword.value = "";
-  loginPassword.focus();
-}
-
-function logout() {
-  localStorage.removeItem(authKey);
-  addConsoleLine("sessao encerrada pelo operador");
-  renderAuthState();
-  loginUser.focus();
-}
-
-async function callApi(path, options = {}) {
-  const response = await fetch(`${apiBase}${path}`, options);
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Falha ao comunicar com o motor local.");
-  }
-
-  return data;
-}
-
-function renderJobStatus(data) {
-  const logs = data.logs || [];
-  const percent = Number(data.percent || 0);
-  jobIsActive = Boolean(data.running);
-
-  if (processState) {
-    processState.textContent = data.running ? "EM ANDAMENTO" : (data.returncode === 0 ? "CONCLUÍDO" : "AGUARDANDO");
-  }
-
-  if (processName) {
-    processName.textContent = data.name || "Nenhuma rotina em execução";
-  }
-
-  if (processDetail) {
-    processDetail.textContent = data.status_text || "Escolha uma etapa abaixo para iniciar.";
-  }
-
-  if (progressBar) {
-    progressBar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
-  }
-
-  if (progressPercent) {
-    progressPercent.textContent = `${Math.round(percent)}%`;
-  }
-
-  if (progressCount) {
-    progressCount.textContent = `${data.current || 0} / ${data.total || 0}`;
-  }
-
-  renderLiveItems(data.live_items || []);
-
-  consoleStream.innerHTML = "";
-
-  logs.slice(-8).forEach((line) => {
-    const p = document.createElement("p");
-    p.innerHTML = `<span>&gt;</span> ${line}`;
-    consoleStream.appendChild(p);
-  });
-
-  if (
-    data.outputs
-    && data.outputs.csv_exists
-    && data.outputs.total_anuncios !== lastOutputCount
-  ) {
-    lastOutputCount = data.outputs.total_anuncios;
-    addConsoleLine(`base pronta: ${data.outputs.total_anuncios} anuncios no CSV`);
-  }
-}
-
-function renderLiveItems(items) {
-  if (!liveList) {
-    return;
-  }
-
-  liveList.innerHTML = "";
-
-  if (!items.length) {
-    const p = document.createElement("p");
-    p.textContent = "Nenhum produto extraído ainda.";
-    liveList.appendChild(p);
-    return;
-  }
-
-  items.slice(-18).reverse().forEach((item) => {
-    const row = document.createElement("div");
-    row.className = "live-item";
-
-    const name = document.createElement("strong");
-    name.textContent = item.produto || "Produto sem nome";
-
-    const sku = document.createElement("span");
-    sku.textContent = item.sku ? `SKU/GVI: ${item.sku}` : "SKU/GVI: aguardando";
-
-    const info = document.createElement("small");
-    info.textContent = item.info || item.stage || "Extraído";
-
-    row.append(name, sku, info);
-    liveList.appendChild(row);
+/* ==========================================================================
+   MODULOS
+   ========================================================================== */
+const modulos = [
+  { ico: "FX", nome: "Fluxo Completo", desc: "Clip + GVI + Bling", total: 24 },
+  { ico: "ML", nome: "Links e GVI", desc: "lista completa de anúncios", total: 60 },
+  { ico: "CL", nome: "Criar Clip", desc: "menu dos três pontinhos", total: 34 },
+  { ico: "LK", nome: "Clip por Link", desc: "verifica links coletados", total: 28 },
+  { ico: "ST", nome: "Estoque", desc: "depósito e variações", total: 40 },
+  { ico: "BG", nome: "Bling Locator", desc: "GVI e localização", total: 50 },
+  { ico: "IMG", nome: "Imagens", desc: "planilha + Mercado Livre", total: 24 },
+];
+function montarModulos() {
+  moduleGrid.innerHTML = "";
+  modulos.forEach((m) => {
+    const el = document.createElement("div");
+    el.className = "module";
+    el.innerHTML =
+      `<div class="module-ico">${m.ico}</div>` +
+      `<strong>${m.nome}</strong>` +
+      `<small>${m.desc}</small>` +
+      `<span class="m-state">● ativo</span>`;
+    el.addEventListener("click", () =>
+      runExtraction({ nome: m.nome, statusText: "Processando", total: m.total })
+    );
+    moduleGrid.appendChild(el);
   });
 }
 
-async function refreshJobStatus() {
-  try {
-    const data = await callApi("/api/status");
-    renderJobStatus(data);
-
-    return data;
-  } catch {
-    return null;
-  }
-}
-
-async function startListaGvi() {
-  return startRun("lista-gvi");
-}
-
-async function startRun(runName) {
-  const label = runLabels[runName] || runName;
-  addConsoleLine(`enviando comando: ${label}...`);
-
-  try {
-    const data = await callApi(`/api/run/${runName}`, {
-      method: "POST",
-    });
-
-    addConsoleLine(data.message);
-    refreshJobStatus();
-  } catch (error) {
-    addConsoleLine(`motor local offline ou ocupado: ${error.message}`);
-  }
-}
-
-function abrirRelatorios(tipo = "links") {
-  const files = reportFiles[tipo] || reportFiles.links;
-  files.forEach((file) => {
-    window.open(`${apiBase}/outputs/${file}`, "_blank");
-  });
-  addConsoleLine(`abrindo relatorios: ${files.join(", ")}`);
-}
-
-function showExtractorModule(moduleName) {
-  extractorTiles.forEach((tile) => {
-    tile.classList.toggle("is-active", tile.dataset.module === moduleName);
-  });
-
-  extractorPanels.forEach((panel) => {
-    panel.classList.toggle("is-active", panel.dataset.modulePanel === moduleName);
-  });
-
-  saveStateNow({
-    activeModule: moduleName,
-  });
-}
-
-function resize() {
+/* ==========================================================================
+   CANVAS NEURAL (fundo)
+   ========================================================================== */
+let nodes = [];
+let W = 0;
+let H = 0;
+function resizeCanvas() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  width = window.innerWidth;
-  height = window.innerHeight;
-  canvas.width = Math.floor(width * dpr);
-  canvas.height = Math.floor(height * dpr);
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  W = window.innerWidth;
+  H = window.innerHeight;
+  neuralCanvas.width = Math.floor(W * dpr);
+  neuralCanvas.height = Math.floor(H * dpr);
+  neuralCanvas.style.width = `${W}px`;
+  neuralCanvas.style.height = `${H}px`;
+  nctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const alvo = Math.round((W * H) / 22000);
+  nodes = Array.from({ length: Math.max(28, Math.min(90, alvo)) }, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.35,
+    vy: (Math.random() - 0.5) * 0.35,
+  }));
 }
-
-function drawNoise() {
-  ctx.clearRect(0, 0, width, height);
-
-  for (let i = 0; i < 170; i++) {
-    const x = Math.random() * width;
-    const y = Math.random() * height;
-    const alpha = Math.random() * 0.18;
-    ctx.fillStyle = `rgba(255, 0, 47, ${alpha})`;
-    ctx.fillRect(x, y, Math.random() * 3 + 1, 1);
+function drawNeural() {
+  nctx.clearRect(0, 0, W, H);
+  for (const n of nodes) {
+    n.x += n.vx;
+    n.y += n.vy;
+    if (n.x < 0 || n.x > W) n.vx *= -1;
+    if (n.y < 0 || n.y > H) n.vy *= -1;
   }
-
-  for (let i = 0; i < 36; i++) {
-    const y = Math.random() * height;
-    ctx.strokeStyle = `rgba(255, 0, 47, ${Math.random() * 0.08})`;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y + Math.random() * 24 - 12);
-    ctx.stroke();
-  }
-
-  requestAnimationFrame(drawNoise);
-}
-
-function typeLoop() {
-  const current = commands[commandIndex];
-
-  if (!deleting) {
-    charIndex += 1;
-    typedCommand.textContent = current.slice(0, charIndex);
-
-    if (charIndex >= current.length) {
-      deleting = true;
-      setTimeout(typeLoop, 1200);
-      return;
-    }
-  } else {
-    charIndex -= 1;
-    typedCommand.textContent = current.slice(0, charIndex);
-
-    if (charIndex <= 0) {
-      deleting = false;
-      commandIndex = (commandIndex + 1) % commands.length;
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const d = Math.hypot(dx, dy);
+      if (d < 130) {
+        nctx.strokeStyle = `rgba(52, 226, 255, ${0.14 * (1 - d / 130)})`;
+        nctx.lineWidth = 1;
+        nctx.beginPath();
+        nctx.moveTo(nodes[i].x, nodes[i].y);
+        nctx.lineTo(nodes[j].x, nodes[j].y);
+        nctx.stroke();
+      }
     }
   }
-
-  setTimeout(typeLoop, deleting ? 28 : 58);
-}
-
-function appendStreamLine() {
-  if (jobIsActive) {
-    return;
+  for (const n of nodes) {
+    nctx.fillStyle = "rgba(155, 107, 255, 0.75)";
+    nctx.beginPath();
+    nctx.arc(n.x, n.y, 1.6, 0, Math.PI * 2);
+    nctx.fill();
   }
-
-  const line = streamLines[Math.floor(Math.random() * streamLines.length)];
-  addConsoleLine(line);
+  requestAnimationFrame(drawNeural);
 }
 
-function pulseBootLog() {
-  const lines = [...bootLog.querySelectorAll("p")];
-  lines.forEach((line) => line.style.opacity = "0.58");
-
-  const active = lines[Math.floor(Math.random() * lines.length)];
-  if (active) {
-    active.style.opacity = "1";
+/* ==========================================================================
+   RELOGIO + CONTADORES
+   ========================================================================== */
+function tickClock() {
+  if (clockEl) clockEl.textContent = new Date().toLocaleTimeString("pt-BR");
+}
+function countUp(el) {
+  const alvo = parseInt(el.dataset.count, 10) || 0;
+  const dur = 1200;
+  const t0 = performance.now();
+  function frame(t) {
+    const p = Math.min(1, (t - t0) / dur);
+    const val = Math.round(alvo * (1 - Math.pow(1 - p, 3)));
+    el.textContent = val.toLocaleString("pt-BR");
+    if (p < 1) requestAnimationFrame(frame);
   }
+  requestAnimationFrame(frame);
 }
 
-document.querySelectorAll("button").forEach((button) => {
-  button.addEventListener("click", () => {
-    const texto = button.textContent.trim().toLowerCase();
-    const runName = button.dataset.run;
-    const reportName = button.dataset.report;
-    addConsoleLine(`comando recebido: ${texto}`);
-
-    if (button.dataset.module) {
-      showExtractorModule(button.dataset.module);
-      return;
+/* ==========================================================================
+   BOOT
+   ========================================================================== */
+const bootMsgs = [
+  "inicializando núcleo cognitivo…",
+  "carregando índice sináptico…",
+  "conectando neurônios de extração…",
+  "sincronizando memória de produtos…",
+  "núcleo pronto.",
+];
+function runBoot() {
+  let i = 0;
+  let pct = 0;
+  const timer = setInterval(() => {
+    pct = Math.min(100, pct + rand(9, 22));
+    bootBar.style.width = `${pct}%`;
+    const idx = Math.min(bootMsgs.length - 1, Math.floor((pct / 100) * bootMsgs.length));
+    if (idx !== i) {
+      i = idx;
+      bootText.textContent = bootMsgs[idx];
     }
-
-    if (runName) {
-      startRun(runName);
-      return;
+    if (pct >= 100) {
+      clearInterval(timer);
+      setTimeout(revelarApp, 450);
     }
+  }, 320);
+}
+function revelarApp() {
+  bootScreen.classList.add("is-gone");
+  shell.hidden = false;
+  document.querySelectorAll(".stat-value[data-count]").forEach(countUp);
+  addConsole("núcleo cognitivo on-line");
+}
 
-    if (reportName) {
-      abrirRelatorios(reportName);
-    }
+/* ==========================================================================
+   EVENTOS
+   ========================================================================== */
+document.querySelectorAll("button[data-run]").forEach((b) => {
+  b.addEventListener("click", () => {
+    const p = runProfiles[b.dataset.run];
+    if (p) runExtraction({ nome: p.nome, statusText: "Processando", total: p.total, download: Boolean(p.download) });
   });
 });
 
-flagInputs.forEach((input) => {
-  input.addEventListener("change", persistFlags);
+document.querySelectorAll(".stepper[data-step]").forEach((b) => {
+  b.addEventListener("click", () => {
+    genQty.value = Math.max(1, Math.min(500, lerQuantidade() + Number(b.dataset.step)));
+    marcarQuick();
+  });
 });
 
-if (loginForm) {
-  loginForm.addEventListener("submit", handleLogin);
+function marcarQuick() {
+  const v = String(lerQuantidade());
+  document.querySelectorAll(".gen-quick button[data-qty]").forEach((b) => {
+    b.classList.toggle("is-on", b.dataset.qty === v);
+  });
 }
-
-if (logoutButton) {
-  logoutButton.addEventListener("click", logout);
-}
-
-window.addEventListener("resize", resize);
-
-restoreFlags();
-restoreConsole();
-renderSaveState();
-renderAuthState();
-showExtractorModule(loadState().activeModule || "fluxo");
-resize();
-drawNoise();
-typeLoop();
-saveStateNow({
-  modules: [
-    "Clip Hunter",
-    "Stock Extractor",
-    "Link Crawler",
-    "Clip Link Checker",
-    "GVI Locator",
-    "Image Downloader",
-    "Video Queue",
-  ],
+document.querySelectorAll(".gen-quick button[data-qty]").forEach((b) => {
+  b.addEventListener("click", () => {
+    genQty.value = b.dataset.qty;
+    marcarQuick();
+  });
 });
-setInterval(appendStreamLine, 2200);
-setInterval(pulseBootLog, 900);
-setInterval(refreshJobStatus, 3000);
+if (genQty) genQty.addEventListener("input", marcarQuick);
+
+if (genGo) genGo.addEventListener("click", gerarListaFinal);
+if (genQty) genQty.addEventListener("keydown", (e) => { if (e.key === "Enter") gerarListaFinal(); });
+
+window.addEventListener("resize", resizeCanvas);
+
+/* ==========================================================================
+   START
+   ========================================================================== */
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+montarModulos();
+marcarQuick();
+resizeCanvas();
+drawNeural();
+tickClock();
+setInterval(tickClock, 1000);
+runBoot();

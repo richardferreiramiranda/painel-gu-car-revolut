@@ -3,499 +3,167 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Controle Gu Car Revolut</title>
+  <title>Second Brain · Gu Car Revolut</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <canvas id="noiseCanvas" aria-hidden="true"></canvas>
+  <canvas id="neuralCanvas" aria-hidden="true"></canvas>
+  <div class="aurora" aria-hidden="true"></div>
 
-  <section class="login-gate" id="loginGate">
-    <div class="code-screen code-screen-left" aria-hidden="true">
-      <div class="screen-top"><span></span><span></span><span></span><b>crawler.py</b></div>
-      <div class="code-rain">
-        <p>driver.get("mercadolivre.com.br/anuncios")</p>
-        <p>for anuncio in anuncios: scan_menu()</p>
-        <p>if "Criar clip" in opcoes: queue.append(gvi)</p>
-        <p>writer.writerow({"sku": gvi, "status": "clip"})</p>
-        <p>next_page.click()</p>
-      </div>
+  <!-- ===================== BOOT ===================== -->
+  <div class="boot" id="bootScreen">
+    <div class="boot-core" aria-hidden="true">
+      <span></span><span></span><span></span>
     </div>
+    <div class="boot-title">SECOND&nbsp;BRAIN</div>
+    <div class="boot-sub" id="bootText">inicializando núcleo cognitivo…</div>
+    <div class="boot-track"><i id="bootBar"></i></div>
+  </div>
 
-    <div class="code-screen code-screen-right" aria-hidden="true">
-      <div class="screen-top"><span></span><span></span><span></span><b>bling_locator.js</b></div>
-      <div class="code-rain is-delayed">
-        <p>search(GVI_4756_PAR)</p>
-        <p>open_product()</p>
-        <p>tab("Estoque").click()</p>
-        <p>location = input.value</p>
-        <p>export("fila_videos.csv")</p>
-      </div>
-    </div>
+  <!-- ===================== APP ===================== -->
+  <main class="shell" id="shell" hidden>
 
-    <div class="code-screen code-screen-bottom" aria-hidden="true">
-      <div class="screen-top"><span></span><span></span><span></span><b>reports.log</b></div>
-      <div class="code-rain is-slow">
-        <p>[OK] links_anuncios.csv sincronizado</p>
-        <p>[OK] anuncios_precisam_clip_lista.csv pronto</p>
-        <p>[RUN] baixando imagens por planilha</p>
-        <p>[RUN] estoque_variacoes.txt atualizado</p>
-      </div>
-    </div>
-
-    <div class="login-card panel">
-      <div class="login-brand">
-        <img class="login-logo" src="assets/kraken-logo.png" alt="Kraken Fire Control Panel" />
-        <div>
-          <small>SECURE ACCESS</small>
-          <h1>KRAKEN FIRE</h1>
-          <p>Central de extratores Mercado Livre e Bling</p>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="brand-copy">
+          <strong>SECOND BRAIN</strong>
+          <span>gu car revolut · núcleo cognitivo</span>
         </div>
       </div>
-
-      <form class="login-form" id="loginForm">
-        <label>
-          <span>operador</span>
-          <input id="loginUser" name="user" type="text" autocomplete="username" placeholder="admin" required />
-        </label>
-        <label>
-          <span>senha</span>
-          <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="••••••" required />
-        </label>
-        <p class="login-error" id="loginError">acesso negado</p>
-        <button type="submit" class="danger-button">Entrar no painel</button>
-      </form>
-
-      <div class="login-hint">
-        <span>usuario: admin</span>
-        <span>senha: 1234</span>
-      </div>
-    </div>
-  </section>
-
-  <main class="terminal-shell is-locked" id="appShell">
-    <header class="terminal-top">
-      <div class="window-controls" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <div class="terminal-title">
-        <strong>PAINEL DE CONTROLE GU CAR REVOLUT</strong>
-        <small>mercado-livre-automation://root/session</small>
-      </div>
-      <div class="terminal-actions">
-        <div class="terminal-badge">ONLINE</div>
-        <button type="button" class="logout-button" id="logoutButton">SAIR</button>
-      </div>
+      <nav class="pills">
+        <span class="pill is-live"><i></i> online</span>
+        <span class="pill"><i></i> sinapses <b id="pillNodes">2.480</b></span>
+        <span class="pill"><i></i> sync <b id="pillSync">98%</b></span>
+        <span class="pill pill-clock" id="clock">--:--:--</span>
+      </nav>
     </header>
 
-    <section class="hero-terminal">
-      <aside class="boot-log panel">
-        <div class="panel-head">
-          <span>BOOT_SEQUENCE</span>
-          <b>LIVE</b>
-        </div>
-        <div class="log-lines" id="bootLog">
-          <p><span>00:01</span> carregando perfil chrome 9222</p>
-          <p><span>00:02</span> validando sessao mercado livre</p>
-          <p><span>00:03</span> injetando motores de extracao</p>
-          <p><span>00:04</span> sincronizando relatorios CSV/TXT</p>
-          <p><span>00:05</span> aguardando comando do operador</p>
-        </div>
-      </aside>
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">// interface cognitiva fictícia</span>
+        <h1>Seu segundo cérebro<br /><em>para o Mercado Livre</em></h1>
+        <p>Um centro neural que observa, indexa e organiza produtos em tempo real —
+           e monta sua fila final de vídeos com um clique. Tudo simulado, só o visual.</p>
 
-      <section class="main-command panel">
-        <div class="command-label">ROOT ACCESS GRANTED</div>
-        <h1>
-          <span>painel</span>
-          <span>gu car</span>
-          <span>revolut</span>
-        </h1>
-        <p class="terminal-copy">
-          Fluxo simples: encontra anúncios com Criar Clip, separa nome e GVI, consulta o Bling e gera a fila com localização.
-        </p>
-
-        <div class="prompt-box">
-          <span class="prompt-user">gu-car@revolut</span>
-          <span class="prompt-path">~/ml/automation</span>
-          <span class="prompt-caret">$</span>
-          <strong id="typedCommand">run --scan-clips --active</strong>
-          <i></i>
+        <div class="hero-actions">
+          <button type="button" class="btn btn-primary" data-run="sync">
+            <span class="btn-glow"></span>Sincronizar cérebro
+          </button>
+          <button type="button" class="btn btn-ghost" data-run="extract">Extrair produtos</button>
+          <button type="button" class="btn btn-ghost" data-run="bling">Localizar no Bling</button>
         </div>
 
-        <div class="command-actions">
-          <button type="button" class="danger-button" data-run="fluxo-teste">Teste rápido</button>
-          <button type="button" class="danger-button" data-run="fluxo-completo">Rodar completo</button>
-          <button type="button" class="line-button" data-report="all">Abrir relatorios</button>
+        <div class="hero-stats">
+          <div class="stat"><b class="stat-value" data-count="865">0</b><span>produtos indexados</span></div>
+          <div class="stat"><b class="stat-value" data-count="312">0</b><span>precisam de clip</span></div>
+          <div class="stat"><b class="stat-value" data-count="47">0</b><span>depósitos mapeados</span></div>
         </div>
-      </section>
-
-      <aside class="threat-panel panel">
-        <div class="panel-head">
-          <span>ROBOT_STATUS</span>
-          <b>ARMED</b>
-        </div>
-        <div class="radar">
-          <div class="radar-sweep"></div>
-          <strong>865</strong>
-          <span>anuncios mapeados</span>
-        </div>
-      </aside>
-    </section>
-
-    <section class="quick-flow panel">
-      <div class="panel-head">
-        <span>2-CLICK_MODE</span>
-        <b>SIMPLIFICADO</b>
       </div>
-      <div class="quick-flow-grid">
-        <button type="button" class="mega-button" data-run="fluxo-teste">
-          <span>01</span>
-          <strong>Teste rápido</strong>
-          <small>1 página de Criar Clip + até 10 GVI no Bling</small>
-        </button>
-        <button type="button" class="mega-button is-danger" data-run="fluxo-completo">
-          <span>02</span>
-          <strong>Rodar completo</strong>
-          <small>todos com Criar Clip + localização Bling</small>
-        </button>
-        <button type="button" class="mega-button" data-report="all">
-          <span>03</span>
-          <strong>Abrir resultados</strong>
-          <small>CSV/TXT de todas as etapas</small>
-        </button>
+
+      <div class="hero-core" aria-hidden="true">
+        <div class="core-orbit orbit-1"><span></span></div>
+        <div class="core-orbit orbit-2"><span></span></div>
+        <div class="core-orbit orbit-3"><span></span></div>
+        <div class="core-ring ring-a"></div>
+        <div class="core-ring ring-b"></div>
+        <div class="core-ring ring-c"></div>
+        <div class="core-bulb">
+          <b id="corePct">100%</b>
+          <small>coerência</small>
+        </div>
       </div>
     </section>
 
-    <section class="extractor-index panel">
-      <div class="panel-head">
-        <span>EXTRACTOR_INDEX</span>
-        <b>SELECIONE UM MODULO</b>
+    <!-- ===================== GERADOR (real) ===================== -->
+    <section class="card generator">
+      <div class="card-head">
+        <span>gerador de lista final</span>
+        <b class="tag tag-cyan">saída .txt</b>
       </div>
-      <div class="extractor-menu" role="tablist" aria-label="Extratores disponiveis">
-        <button type="button" class="extractor-tile is-active" data-module="fluxo">
-          <span class="module-logo">FX</span>
-          <strong>Fluxo Completo</strong>
-          <small>Clip + GVI + Bling</small>
+      <div class="generator-body">
+        <div class="gen-field">
+          <label for="genQty">Quantos produtos gerar?</label>
+          <div class="gen-input">
+            <button type="button" class="stepper" data-step="-1" aria-label="menos">−</button>
+            <input id="genQty" type="number" min="1" max="500" value="30" inputmode="numeric" />
+            <button type="button" class="stepper" data-step="1" aria-label="mais">+</button>
+          </div>
+          <div class="gen-quick">
+            <button type="button" data-qty="8">8</button>
+            <button type="button" data-qty="30">30</button>
+            <button type="button" data-qty="100">100</button>
+            <button type="button" data-qty="250">250</button>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-lg" id="genGo">
+          <span class="btn-glow"></span>Gerar lista .txt
         </button>
-        <button type="button" class="extractor-tile" data-module="links">
-          <span class="module-logo">ML</span>
-          <strong>Links e GVI</strong>
-          <small>lista completa de anuncios</small>
-        </button>
-        <button type="button" class="extractor-tile" data-module="clips">
-          <span class="module-logo">CL</span>
-          <strong>Criar Clip</strong>
-          <small>menu dos tres pontinhos</small>
-        </button>
-        <button type="button" class="extractor-tile" data-module="clipsLink">
-          <span class="module-logo">LK</span>
-          <strong>Clip por Link</strong>
-          <small>verifica links ja coletados</small>
-        </button>
-        <button type="button" class="extractor-tile" data-module="estoque">
-          <span class="module-logo">ST</span>
-          <strong>Estoque</strong>
-          <small>deposito e variacoes</small>
-        </button>
-        <button type="button" class="extractor-tile" data-module="bling">
-          <span class="module-logo">BG</span>
-          <strong>Bling Locator</strong>
-          <small>GVI e localizacao</small>
-        </button>
-        <button type="button" class="extractor-tile" data-module="imagens">
-          <span class="module-logo">IMG</span>
-          <strong>Imagens</strong>
-          <small>planilha + Mercado Livre</small>
-        </button>
+        <p class="gen-hint" id="genHint">Gera a fila final fictícia (produto · GVI · clip · estoque · localização) e baixa em <b>.txt</b>.</p>
       </div>
     </section>
 
-    <section class="extractor-workspace">
-      <article class="extractor-panel panel is-active" data-module-panel="fluxo">
-        <div class="extractor-hero">
-          <span class="module-logo is-large">FX</span>
-          <div>
-            <span>MODULO PRINCIPAL</span>
-            <h2>Fluxo Completo Clip + GVI + Bling</h2>
-            <p>Roda o processo inteiro: acha anuncios com Criar Clip/Incluir Clip, monta a fila com GVI e busca a localizacao no Bling.</p>
-          </div>
-        </div>
-        <div class="extractor-actions">
-          <button type="button" class="danger-button" data-run="fluxo-teste">Teste rapido</button>
-          <button type="button" class="danger-button" data-run="fluxo-completo">Rodar completo</button>
-          <button type="button" class="line-button" data-report="all">Abrir resultados</button>
-        </div>
-        <div class="extractor-files">Saidas: anuncios_precisam_clip_lista.csv, fila_videos_com_localizacao.csv</div>
-      </article>
-
-      <article class="extractor-panel panel" data-module-panel="links">
-        <div class="extractor-hero">
-          <span class="module-logo is-large">ML</span>
-          <div>
-            <span>EXTRATOR 01</span>
-            <h2>Links, nomes, codigos e GVI dos anuncios</h2>
-            <p>Percorre a listagem de anuncios ativos do Mercado Livre e gera uma base completa para os outros robos.</p>
-          </div>
-        </div>
-        <div class="extractor-actions">
-          <button type="button" class="danger-button" data-run="lista-gvi-teste">Testar 1 pagina</button>
-          <button type="button" class="danger-button" data-run="lista-gvi">Extrair tudo</button>
-          <button type="button" class="line-button" data-report="links">Abrir relatorio</button>
-        </div>
-        <div class="extractor-files">Saidas: links_anuncios.csv, links_anuncios.txt</div>
-      </article>
-
-      <article class="extractor-panel panel" data-module-panel="clips">
-        <div class="extractor-hero">
-          <span class="module-logo is-large">CL</span>
-          <div>
-            <span>EXTRATOR 02</span>
-            <h2>Anuncios que precisam de Criar Clip</h2>
-            <p>Clica nos tres pontinhos ao lado dos anuncios e salva apenas os que aparecem com Criar Clip ou Incluir Clip.</p>
-          </div>
-        </div>
-        <div class="extractor-actions">
-          <button type="button" class="danger-button" data-run="clips-teste">Testar 1 pagina</button>
-          <button type="button" class="danger-button" data-run="clips">Extrair tudo</button>
-          <button type="button" class="line-button" data-report="clips">Abrir relatorio</button>
-        </div>
-        <div class="extractor-files">Saidas: anuncios_precisam_clip_lista.csv, anuncios_precisam_clip_lista.txt</div>
-      </article>
-
-      <article class="extractor-panel panel" data-module-panel="clipsLink">
-        <div class="extractor-hero">
-          <span class="module-logo is-large">LK</span>
-          <div>
-            <span>EXTRATOR 03</span>
-            <h2>Verificador de clip por link</h2>
-            <p>Usa a lista de links ja coletados e abre cada anuncio individualmente para localizar a acao de clip.</p>
-          </div>
-        </div>
-        <div class="extractor-actions">
-          <button type="button" class="danger-button" data-run="clips-link-teste">Testar 10 links</button>
-          <button type="button" class="danger-button" data-run="clips-link">Verificar todos</button>
-          <button type="button" class="line-button" data-report="clipsLink">Abrir relatorio</button>
-        </div>
-        <div class="extractor-files">Saidas: anuncios_precisam_clip.csv, anuncios_precisam_clip.txt</div>
-      </article>
-
-      <article class="extractor-panel panel" data-module-panel="estoque">
-        <div class="extractor-hero">
-          <span class="module-logo is-large">ST</span>
-          <div>
-            <span>EXTRATOR 04</span>
-            <h2>Estoque, deposito e variacoes</h2>
-            <p>Abre a pagina de anuncios sem estoque nos depositos, expande as variacoes e extrai deposito/quantidade.</p>
-          </div>
-        </div>
-        <div class="extractor-actions">
-          <button type="button" class="danger-button" data-run="estoque-teste">Testar 1 pagina</button>
-          <button type="button" class="danger-button" data-run="estoque">Extrair tudo</button>
-          <button type="button" class="line-button" data-report="estoque">Abrir relatorio</button>
-        </div>
-        <div class="extractor-files">Saida: estoque_variacoes.txt</div>
-      </article>
-
-      <article class="extractor-panel panel" data-module-panel="bling">
-        <div class="extractor-hero">
-          <span class="module-logo is-large">BG</span>
-          <div>
-            <span>EXTRATOR 05</span>
-            <h2>Bling Locator por GVI</h2>
-            <p>Pesquisa o GVI no Bling, abre o produto, entra na aba interna Estoque e captura a localizacao fisica.</p>
-          </div>
-        </div>
-        <div class="extractor-actions">
-          <button type="button" class="danger-button" data-run="bling-teste">Testar 10 itens</button>
-          <button type="button" class="danger-button" data-run="bling">Localizar todos</button>
-          <button type="button" class="line-button" data-report="bling">Abrir relatorio</button>
-        </div>
-        <div class="extractor-files">Saidas: fila_videos_com_localizacao.csv, fila_videos_com_localizacao.txt</div>
-      </article>
-
-      <article class="extractor-panel panel" data-module-panel="imagens">
-        <div class="extractor-hero">
-          <span class="module-logo is-large">IMG</span>
-          <div>
-            <span>EXTRATOR 06</span>
-            <h2>Baixar imagens por planilha</h2>
-            <p>Le a planilha XLSX, acessa os links do Mercado Livre e salva imagens dos produtos junto com um JSON de controle.</p>
-          </div>
-        </div>
-        <div class="extractor-actions">
-          <button type="button" class="danger-button" data-run="imagens">Baixar imagens</button>
-          <button type="button" class="line-button" data-report="imagens">Abrir JSON</button>
-        </div>
-        <div class="extractor-files">Saidas: produtos_imagens.json, pasta imagens_salvas</div>
-      </article>
-    </section>
-
-    <section class="progress-panel panel">
-      <div class="panel-head">
-        <span>PROCESS_STATUS</span>
-        <b id="processState">AGUARDANDO</b>
+    <!-- ===================== PROGRESSO ===================== -->
+    <section class="card progress">
+      <div class="card-head">
+        <span>process_status</span>
+        <b class="tag" id="procState">ocioso</b>
       </div>
       <div class="progress-body">
         <div class="progress-copy">
-          <strong id="processName">Nenhuma rotina em execução</strong>
-          <span id="processDetail">Escolha uma etapa abaixo para iniciar.</span>
+          <strong id="procName">Núcleo em repouso</strong>
+          <span id="procDetail">Escolha uma ação para ativar o segundo cérebro.</span>
         </div>
-        <div class="progress-meter" aria-label="Andamento do processo">
-          <div id="progressBar"></div>
-        </div>
-        <div class="progress-numbers">
-          <span id="progressPercent">0%</span>
-          <span id="progressCount">0 / 0</span>
+        <div class="bar"><i id="barFill"></i></div>
+        <div class="progress-nums">
+          <b id="barPct">0%</b>
+          <span id="barCount">0 / 0</span>
         </div>
       </div>
     </section>
 
-    <section class="process-grid">
-      <article class="process-card panel is-hot">
-        <div class="process-title">
-          <span>PROC_01</span>
-          <strong>Achar Criar Clip</strong>
+    <!-- ===================== LIVE + CONSOLE ===================== -->
+    <section class="live-grid">
+      <article class="card live">
+        <div class="card-head">
+          <span>live_extraction</span>
+          <b class="tag tag-pink"><i class="dot"></i> ao vivo</b>
         </div>
-        <p>Clica nos tres pontinhos, filtra anúncios com Criar clip/Incluir clip e salva nome, código e GVI.</p>
-        <div class="process-command">python extrair_clips_lista_anuncios.py</div>
-        <div class="process-footer">
-          <span>gera anuncios_precisam_clip</span>
-          <button type="button" data-run="clips">executar</button>
-          <button type="button" data-run="clips-teste">1 página</button>
-          <button type="button" data-report="clips">relatorio</button>
+        <div class="live-feed" id="liveFeed">
+          <p class="empty">Nenhum produto extraído ainda. Ative uma rotina.</p>
         </div>
       </article>
 
-      <article class="process-card panel">
-        <div class="process-title">
-          <span>PROC_02</span>
-          <strong>Fila GVI/Nome</strong>
+      <article class="card console">
+        <div class="card-head">
+          <span>neural_console</span>
+          <b class="tag tag-violet">stream</b>
         </div>
-        <p>Usa o arquivo da etapa 1 como fila oficial dos produtos que precisam de vídeo/clip.</p>
-        <div class="process-command">outputs/anuncios_precisam_clip_lista.csv</div>
-        <div class="process-footer">
-          <span>nome + GVI</span>
-          <button type="button" data-report="clips">relatorio</button>
-        </div>
-      </article>
-
-      <article class="process-card panel">
-        <div class="process-title">
-          <span>PROC_03</span>
-          <strong>Bling Locator</strong>
-        </div>
-        <p>Pesquisa cada GVI no Bling, abre o produto, entra na aba Estoque e captura a localização.</p>
-        <div class="process-command">python localizar_gvi_bling.py</div>
-        <div class="process-footer">
-          <span>gera fila final</span>
-          <button type="button" data-run="bling">executar</button>
-          <button type="button" data-run="bling-teste">10 itens</button>
-          <button type="button" data-report="bling">relatorio</button>
-        </div>
-      </article>
-
-      <article class="process-card panel">
-        <div class="process-title">
-          <span>PROC_04</span>
-          <strong>Resultado final</strong>
-        </div>
-        <p>Monta a fila final de gravacao com produto, GVI, clip necessario, estoque Bling e localizacao fisica.</p>
-        <div class="process-command">export fila_videos_com_localizacao.csv</div>
-        <div class="process-footer">
-          <span>saida final</span>
-          <button type="button" data-report="bling">abrir</button>
-          <button type="button" data-report="all">todos</button>
+        <div class="console-stream" id="console">
+          <p><span>›</span> núcleo cognitivo pronto</p>
+          <p><span>›</span> índice sináptico carregado</p>
+          <p><span>›</span> aguardando comando do operador</p>
         </div>
       </article>
     </section>
 
-    <section class="operator-grid">
-      <article class="panel console-panel">
-        <div class="panel-head">
-          <span>EXECUTION_CONSOLE</span>
-          <b>STREAM</b>
-        </div>
-        <div class="console-stream" id="consoleStream">
-          <p><span>&gt;</span> aguardando ordem de execucao...</p>
-          <p><span>&gt;</span> scripts carregados em /work</p>
-          <p><span>&gt;</span> saida definida para /outputs</p>
-          <p><span>&gt;</span> modulo Bling pronto para localizar GVI</p>
-          <p><span>&gt;</span> operador autorizado</p>
-        </div>
-      </article>
-
-      <article class="panel live-panel">
-        <div class="panel-head">
-          <span>LIVE_PRODUCTS</span>
-          <b>AO VIVO</b>
-        </div>
-        <div class="live-list" id="liveList">
-          <p>Nenhum produto extraído ainda.</p>
-        </div>
-      </article>
-
-      <article class="panel switches-panel">
-        <div class="panel-head">
-          <span>FLAGS</span>
-          <b>MANUAL</b>
-        </div>
-        <div class="switch-list">
-          <label><input type="checkbox" checked /> anuncios ativos</label>
-          <label><input type="checkbox" /> anuncios pausados</label>
-          <label><input type="checkbox" checked /> extrair SKU</label>
-          <label><input type="checkbox" checked /> gerar CSV</label>
-          <label><input type="checkbox" checked /> gerar TXT</label>
-          <label><input type="checkbox" checked /> buscar Bling</label>
-          <label><input type="checkbox" checked /> fila de videos</label>
-          <label><input type="checkbox" /> modo silencioso</label>
-        </div>
-      </article>
+    <!-- ===================== MÓDULOS ===================== -->
+    <section class="card modules">
+      <div class="card-head">
+        <span>neurônios / módulos</span>
+        <b class="tag tag-cyan">7 ativos</b>
+      </div>
+      <div class="module-grid" id="moduleGrid"></div>
     </section>
 
-    <section class="memory-grid">
-      <article class="panel memory-panel">
-        <div class="panel-head">
-          <span>PROJECT_MEMORY</span>
-          <b>AUTO-SAVE</b>
-        </div>
-        <div class="memory-list" id="memoryList">
-          <div class="memory-item">
-            <span>CORE</span>
-            <strong>Interface CMD agressiva</strong>
-            <p>outputs/painel-gu-car-revolut</p>
-          </div>
-          <div class="memory-item">
-            <span>PROC_01</span>
-            <strong>Clip Hunter por listagem</strong>
-            <p>work/extrair_clips_lista_anuncios.py</p>
-          </div>
-          <div class="memory-item">
-            <span>PROC_03</span>
-            <strong>Link Crawler automatico</strong>
-            <p>work/extrair_links_anuncios.py</p>
-          </div>
-          <div class="memory-item">
-            <span>PROC_04</span>
-            <strong>GVI Locator Bling calibrado</strong>
-            <p>work/localizar_gvi_bling.py</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel save-panel">
-        <div class="panel-head">
-          <span>SAVE_STATE</span>
-          <b id="saveState">SYNCED</b>
-        </div>
-        <div class="save-readout">
-          <p><span>ultimo checkpoint</span><strong id="lastSaved">carregando...</strong></p>
-          <p><span>persistencia local</span><strong>ativa</strong></p>
-          <p><span>saida dos robos</span><strong>/outputs</strong></p>
-          <p><span>codigo operacional</span><strong>/work</strong></p>
-        </div>
-      </article>
-    </section>
+    <footer class="footer">
+      <span>SECOND BRAIN · GU CAR REVOLUT</span>
+      <span>interface fictícia · sem backend · <b id="year">2026</b></span>
+    </footer>
   </main>
 
   <script src="app.js"></script>
